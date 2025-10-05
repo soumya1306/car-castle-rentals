@@ -16,7 +16,7 @@ export default function Navbar() {
       <div className="flex items-center sm:mx-20 justify-between w-full ">
         <Link href="/">
           <Image
-            className="w-60 h-16 m-2"
+            className="w-65 h-16 m-2"
             src={carCastleLogo}
             alt="Car Castle Logo"
           />
