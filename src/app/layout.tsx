@@ -1,6 +1,8 @@
+import Navbar from "@/components/Navbar/Navbar";
+
 import type { Metadata } from "next";
+
 import "./globals.css";
-import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "Car Castle",
