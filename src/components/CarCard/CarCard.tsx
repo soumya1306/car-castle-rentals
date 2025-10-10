@@ -1,23 +1,22 @@
 "use client";
 
 import Image from "next/image";
-
-import { Car } from "@/types/api";
-
-import Button from "../Button";
+import Link from "next/link";
+import { LuCar, LuFuel, LuMapPin, LuUsers } from "react-icons/lu";
 
 import mainCar from "@/assets/main_car.png";
-import { FiUser } from "react-icons/fi";
-import { LuCar, LuFuel, LuMapPin, LuUsers } from "react-icons/lu";
+import { Car } from "@/types/car";
 
 interface CarCardProps {
   car: Car;
-  onBook?: (car: Car) => void;
 }
 
-export default function CarCard({ car, onBook }: CarCardProps) {
+export default function CarCard({ car }: CarCardProps) {
   return (
-    <div className="rounded-xl shadow-lg bg-white hover:-translate-y-1 overflow-hidden transition-transform duration-400 cursor-pointer flex flex-col gap-2">
+    <Link
+      href={`/cars/${car._id}`}
+      className="rounded-xl w-80 shadow-lg bg-white hover:-translate-y-1 overflow-hidden transition-transform duration-400 cursor-pointer flex flex-col gap-2"
+    >
       <div className="relative w-full h-48 mb-2">
         <Image
           src={mainCar}
@@ -26,7 +25,7 @@ export default function CarCard({ car, onBook }: CarCardProps) {
           className="object-cover rounded w-full h-full transition-transform duration-500 hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
         />
-        {car.isAvaliable ? (
+        {car.isAvailable ? (
           <span className="absolute top-4 left-4 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
             Available
           </span>
@@ -48,12 +47,13 @@ export default function CarCard({ car, onBook }: CarCardProps) {
             <h3 className="text-xl font-medium">
               {car.brand} • {car.model}
             </h3>
-            <p className="text-muted-foreground text-sm">{car.category} {car.year}</p>
+            <p className="text-muted-foreground text-sm">
+              {car.category} {car.year}
+            </p>
           </div>
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-2 text-gray-700">
-
           <div className="flex items-center  text-muted-foreground">
             <LuUsers className="inline-block mr-1 "></LuUsers>
             <span>{car.seating_capacity} Seats</span>
@@ -73,11 +73,8 @@ export default function CarCard({ car, onBook }: CarCardProps) {
             <LuMapPin className="inline-block mr-1 "></LuMapPin>
             <span>{car.location} </span>
           </div>
-
         </div>
-
       </div>
-
-    </div>
+    </Link>
   );
 }

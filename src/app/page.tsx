@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import mainCar from "@/assets/main_car.png";
+import FeaturedSection from "@/components/FeaturedSection";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
         src={mainCar}
         alt="Car Castle Logo"
       />
+      <FeaturedSection />
     </div>
   );
 }

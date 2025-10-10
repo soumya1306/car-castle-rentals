@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
-import { Car } from '@/types/api';
+import { useState } from 'react';
+
+import { Car } from '@/types/car';
 import { uploadImage } from '@/utils/image';
 
 interface CarFormProps {

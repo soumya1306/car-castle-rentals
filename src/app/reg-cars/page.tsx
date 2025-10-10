@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import CarCard from "@/components/CarCard/CarCard";
-import { Car } from "@/types/api";
+import { Car } from "@/types/car";
 import { fetchApi } from "@/utils/api";
 
 export default function RegularCars() {
@@ -25,8 +25,6 @@ export default function RegularCars() {
     loadCars();
   }, []);
 
-  console.log(cars)
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -38,10 +36,6 @@ export default function RegularCars() {
           <CarCard
             key={car._id}
             car={car}
-            onBook={async (car) => {
-              // Add booking logic here
-              console.log("Booking car:", car);
-            }}
           />
         ))}
       </div>
