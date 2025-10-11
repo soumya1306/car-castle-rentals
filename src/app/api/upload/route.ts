@@ -1,16 +1,29 @@
 import { put } from "@vercel/blob";
-import { handleUpload } from "@vercel/blob/client";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request): Promise<NextResponse> {
-  const formData = await request.formData();
-  const file = formData.get("file") as File;
-  const filename = formData.get("filename") as string;
-
   try {
-    // Handle the upload using Vercel Blob
+    const formData = await request.formData();
+    const file = formData.get("file");
+    const filename = formData.get("filename");
+
+    if (!file || !(file instanceof File)) {
+      return NextResponse.json(
+        { error: "No file provided" },
+        { status: 400 }
+      );
+    }
+
+    if (!filename || typeof filename !== "string") {
+      return NextResponse.json(
+        { error: "No filename provided" },
+        { status: 400 }
+      );
+    }
+
     const blob = await put(filename, file, {
       access: 'public',
+      addRandomSuffix: true // Prevents naming conflicts
     });
 
     return NextResponse.json({
@@ -18,6 +31,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       success: true
     });
   } catch (error) {
+    console.error("Upload error:", error);
     return NextResponse.json(
       { error: "Failed to upload image" },
       { status: 500 }
@@ -25,10 +39,10 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 }
 
-// GET endpoint to generate a presigned URL for client-side uploads
+// Generate a URL for the uploaded file
 export async function GET(request: Request): Promise<NextResponse> {
   try {
-    const searchParams = new URL(request.url).searchParams;
+    const { searchParams } = new URL(request.url);
     const filename = searchParams.get("filename");
 
     if (!filename) {
@@ -38,15 +52,14 @@ export async function GET(request: Request): Promise<NextResponse> {
       );
     }
 
-    const response = await handleUpload({
-      callbackUrl: "/api/upload",
-      filename,
+    return NextResponse.json({
+      success: true,
+      url: `${process.env.NEXT_PUBLIC_BLOB_URL}/${filename}`
     });
-
-    return NextResponse.json(response);
   } catch (error) {
+    console.error("URL generation error:", error);
     return NextResponse.json(
-      { error: "Failed to generate upload URL" },
+      { error: "Failed to generate URL" },
       { status: 500 }
     );
   }

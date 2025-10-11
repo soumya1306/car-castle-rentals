@@ -54,7 +54,7 @@ export default function CarForm({ onSubmit, initialData }: CarFormProps) {
         description: formData.get('description') as string,
         type: formData.get('type') as Car['type'],
         image: imageUrl,
-        isAvaliable: true,
+        isAvailable: true,
       };
 
       onSubmit(carData);

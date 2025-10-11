@@ -4,26 +4,29 @@ import Image from "next/image";
 import Link from "next/link";
 import { LuCar, LuFuel, LuMapPin, LuUsers } from "react-icons/lu";
 
-import mainCar from "@/assets/main_car.png";
 import { Car } from "@/types/car";
+
+
 
 interface CarCardProps {
   car: Car;
 }
 
 export default function CarCard({ car }: CarCardProps) {
+  console.log()
   return (
     <Link
       href={`/cars/${car._id}`}
-      className="rounded-xl w-80 shadow-lg bg-white hover:-translate-y-1 overflow-hidden transition-transform duration-400 cursor-pointer flex flex-col gap-2"
+      className="rounded-xl w-90 shadow-lg bg-white hover:-translate-y-1 overflow-hidden transition-transform duration-400 cursor-pointer flex flex-col gap-2"
     >
       <div className="relative w-full h-48 mb-2">
         <Image
-          src={mainCar}
+          src={`${process.env.NEXT_PUBLIC_BLOB_URL}/thar-black.jpg`}
           alt={`${car.brand} ${car.model}`}
           fill
           className="object-cover rounded w-full h-full transition-transform duration-500 hover:scale-105"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+          priority={false}
         />
         {car.isAvailable ? (
           <span className="absolute top-4 left-4 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full">

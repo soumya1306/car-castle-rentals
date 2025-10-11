@@ -19,7 +19,7 @@ export async function uploadImage(file: File, filename: string): Promise<string>
 
     return data.url;
   } catch (error) {
-    throw new Error('Failed to upload image');
+    throw new Error('Failed to upload image' + (error instanceof Error ? `: ${error.message}` : ''));
   }
 }
 
@@ -27,6 +27,6 @@ export async function deleteImage(url: string): Promise<void> {
   try {
     await del(url);
   } catch (error) {
-    throw new Error('Failed to delete image');
+    throw new Error('Failed to delete image' + (error instanceof Error ? `: ${error.message}` : ''));
   }
 }

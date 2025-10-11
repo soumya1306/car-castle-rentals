@@ -48,7 +48,9 @@ export default function FeaturedSection() {
           <CarCard key={car._id} car={car} />
         ))}
       </div>
-      <Button onClick={() => router.push('/reg-cars')}>Explore all cars</Button>
+      <div className="mt-12">
+        <Button onClick={() => router.push("/reg-cars")}>View All Cars</Button>
+      </div>
     </div>
 
   );

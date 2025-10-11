@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import CarCard from "@/components/CarCard/CarCard";
+import Title from "@/components/Title";
 import { Car } from "@/types/car";
 import { fetchApi } from "@/utils/api";
 
@@ -17,7 +18,7 @@ export default function RegularCars() {
       if (response.error) {
         setError(response.error);
       } else if (response.data) {
-        setCars(response.data.cars.filter(car => car.type === "regular"));
+        setCars(response.data.cars.filter((car) => car.type === "regular"));
       }
       setLoading(false);
     }
@@ -29,14 +30,17 @@ export default function RegularCars() {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="p-6">
-      <h1 className="text-4xl text-center font-semibold mb-6">Regular Cars</h1>
+    <div className="">
+      <div className="w-full bg-primary py-30 mb-20">
+        <Title
+        title="Regular Cars"
+        subtitle="Smart choices for smart travelers - dependable cars at great prices. Explore our selection of regular cars."
+        color="white"
+      />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-15 2xl:mx-100">
-        {cars.map(car => (
-          <CarCard
-            key={car._id}
-            car={car}
-          />
+        {cars.map((car) => (
+          <CarCard key={car._id} car={car} />
         ))}
       </div>
     </div>

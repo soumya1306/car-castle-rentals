@@ -24,15 +24,15 @@ export default function MobileNavbar() {
 
         <div
           id="links"
-          className={`flex fixed right-0 top-20 w-60 flex-col items-end bg-primary/20 z-50 transition-all h-full duration-300 ${
+          className={`flex fixed right-0 top-16 w-70 flex-col items-center bg-primary/80 z-50 transition-all h-full duration-300 ${
             isMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
           {NAVBAR_MENU_ELEMENTS.map((element) => (
-            <div className="p-4" key={element.name}>
+            <div className="p-4 text-left" key={element.name}>
               <Link
                 href={element.href}
-                className="text-primary hover:opacity-80"
+                className="text-white hover:opacity-80"
               >
                 {element.name}
               </Link>
