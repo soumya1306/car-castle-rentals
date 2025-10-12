@@ -8,6 +8,7 @@ import { fetchApi } from "@/utils/api";
 
 import Button from "./Button";
 import CarCard from "./CarCard/CarCard";
+import GridLoader from "./loaders/GridLoader";
 import Title from "./Title";
 
 export default function FeaturedSection() {
@@ -22,7 +23,7 @@ export default function FeaturedSection() {
       if (response.error) {
         setError(response.error);
       } else if (response.data) {
-        setCars(response.data.cars.filter((car) => car.featured === true).slice(0, 3));
+        setCars(response.data.cars.filter((car) => car.featured === true).slice(0, 6));
       }
       setLoading(false);
     }
@@ -30,7 +31,18 @@ export default function FeaturedSection() {
     loadCars();
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return (
+    <div className="flex flex-col items-center py-24 px-6 md:px-16 xl:px-32">
+      <div>
+        <Title
+          title="Featured Cars"
+          subtitle="Check out our featured cars available for rent."
+        />
+      </div>
+
+      <GridLoader count={6} className="mt-18" />
+    </div>
+  );
   if (error) return <div>Error: {error}</div>;
 
 
