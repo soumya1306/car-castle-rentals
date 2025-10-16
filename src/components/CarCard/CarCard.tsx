@@ -10,13 +10,14 @@ import { Car } from "@/types/car";
 
 interface CarCardProps {
   car: Car;
+  type: "premium" | "regular" | "luxury";
 }
 
-export default function CarCard({ car }: CarCardProps) {
-  console.log()
+export default function CarCard({ car, type }: CarCardProps) {
+
   return (
     <Link
-      href={`/cars/${car._id}`}
+      href={type === "premium" ? `/prem-cars/${car._id}` : `/reg-cars/${car._id}`}
       className="rounded-xl w-90 shadow-lg bg-white hover:-translate-y-1 overflow-hidden transition-transform duration-400 cursor-pointer flex flex-col gap-2"
     >
       <div className="relative w-full h-48 mb-2">
@@ -51,7 +52,7 @@ export default function CarCard({ car }: CarCardProps) {
               {car.brand} • {car.model}
             </h3>
             <p className="text-muted-foreground text-sm">
-              {car.category} {car.year}
+              {car.category} • {car.year}
             </p>
           </div>
         </div>

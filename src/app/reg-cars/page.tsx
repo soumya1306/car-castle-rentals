@@ -7,6 +7,7 @@ import GridLoader from "@/components/loaders/GridLoader";
 import Title from "@/components/Title";
 import { Car } from "@/types/car";
 import { fetchApi } from "@/utils/api";
+import SearchBar from "@/components/SearchBar";
 
 export default function RegularCars() {
   const [cars, setCars] = useState<Car[]>([]);
@@ -27,35 +28,37 @@ export default function RegularCars() {
     loadCars();
   }, []);
 
-  if (loading) return (
+  if (loading)
+    return (
+      <div className="">
+        <div className="w-full bg-primary py-30 mb-20 justify-center">
+          <Title
+            title="Regular Cars"
+            subtitle="Smart choices for smart travelers - dependable cars at great prices. Explore our selection of regular cars."
+            color="white"
+          />
+        </div>
+        <div className="flex flex-col items-center py-24 px-6 md:px-16 xl:px-32">
+          <GridLoader count={9} />
+        </div>
+      </div>
+    );
+  if (error) return <div>Error: {error}</div>;
+
+  return (
     <div className="">
-      <div className="w-full bg-primary py-30 mb-20">
+      <div className="w-full flex flex-col bg-primary py-30 mb-10 items-center">
         <Title
           title="Regular Cars"
           subtitle="Smart choices for smart travelers - dependable cars at great prices. Explore our selection of regular cars."
           color="white"
         />
-      </div>
-      <div className="flex flex-col items-center py-24 px-6 md:px-16 xl:px-32">
-        <GridLoader count={9} />
-      </div>
-    </div>
-  );
-  if (error) return <div>Error: {error}</div>;
-
-  return (
-    <div className="">
-      <div className="w-full bg-primary py-30 mb-20">
-        <Title
-        title="Regular Cars"
-        subtitle="Smart choices for smart travelers - dependable cars at great prices. Explore our selection of regular cars."
-        color="white"
-      />
+        <SearchBar />
       </div>
       <div className="flex flex-col items-center py-24 px-6 md:px-16 xl:px-32">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {cars.map((car) => (
-            <CarCard key={car._id} car={car} />
+            <CarCard key={car._id} car={car} type="regular" />
           ))}
         </div>
       </div>

@@ -5,10 +5,10 @@ import logo from "@/assets/car castle.png";
 
 const Footer = () => {
   return (
-    <div className="text-black pt-8 px-6 md:px-16 lg:px-24 mt-20 lg:max-w-[1024px] xl:max-w-[1400px] mx-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center gap-12">
+    <div className="text-black pt-8 px-6 md:px-16 lg:px-24 mt-20 mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:justify-center lg:justify-items-center gap-12">
         {/* Logo and Description */}
-        <div className="max-w-80 flex flex-col items-start lg:pl-8">
+        <div className="max-w-80 flex flex-col items-start ">
           <Image
             src={logo}
             alt="Car Castle Logo"
@@ -41,7 +41,7 @@ const Footer = () => {
 
         {/* Company */}
         <div className="max-w-80 flex flex-col items-start lg:items-center ">
-          <p className="text-lg text-gray-800">COMPANY</p>
+          <p className="text-lg text-gray-800 font-bold">COMPANY</p>
           <ul className="mt-3 flex flex-col gap-2 ">
             <li>
               <a href="#">About</a>
@@ -63,7 +63,7 @@ const Footer = () => {
 
         {/* Support */}
         <div className="max-w-80 flex flex-col items-start lg:items-center">
-          <p className="text-lg text-gray-800 -ml-18">SUPPORT</p>
+          <p className="text-xl text-gray-800 lg:-ml-18 font-bold">SUPPORT</p>
           <ul className="mt-3 flex flex-col gap-2 ">
             <li>
               <a href="#">Help Center</a>
@@ -82,7 +82,16 @@ const Footer = () => {
             </li>
           </ul>
         </div>
+
+        <div className="max-w-80 flex flex-col items-start lg:items-start">
+          <p className="text-lg text-gray-800 font-bold ">CONTACT</p>
+          <p className="flex">
+            Address: 123 Car St, Auto City, CA 90210
+          </p>
+        </div>
       </div>
+
+      
       <hr className="border-gray-300 mt-8" />
       <div className="flex flex-col md:flex-row gap-2 items-center justify-between py-5">
         <p>

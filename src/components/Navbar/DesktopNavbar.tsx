@@ -8,7 +8,7 @@ export default function DesktopNavbar() {
   return (
     <div
       id="links"
-      className="flex gap-10 justify-end items-center mr-20 max-sm:hidden"
+      className="flex gap-10 justify-end items-center lg:mr-6 xl:mr-10 2xl:mr-14  max-sm:hidden"
     >
       <Link href="/" className="text-primary 2xl:text-[18px] 2xl:text- opacity-80 hover:opacity-100">
         Home

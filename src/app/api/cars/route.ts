@@ -4,6 +4,20 @@ import { NextRequest, NextResponse } from "next/server";
 import clientPromise from "@/lib/mongodb";
 import { Car } from "@/types/car";
 
+/**
+ * Handles GET requests to fetch cars from the database
+ * 
+ * @param request - Next.js request object containing query parameters
+ * @returns NextResponse with cars data or error message
+ * 
+ * @example
+ * // Fetch all cars
+ * GET /api/cars
+ * 
+ * @example
+ * // Fetch premium cars that are available
+ * GET /api/cars?type=premium&isAvailable=true
+ */
 export async function GET(request: NextRequest) {
   try {
     // Connect to MongoDB
@@ -12,20 +26,36 @@ export async function GET(request: NextRequest) {
 
     // Get query parameters
     const { searchParams } = new URL(request.url);
-    const query: Record<string, string | boolean> = {};
+    const query: Record<string, string | boolean | mongoose.Types.ObjectId> = {};
 
     // Add filters based on search parameters
     const brand = searchParams.get('brand');
     const category = searchParams.get('category');
     const type = searchParams.get('type');
-    const isAvailable = searchParams.get('isAvaliable');
+    const isAvailable = searchParams.get('isAvailable');
+    const _id = searchParams.get('_id');
 
     if (brand) query.brand = brand;
     if (category) query.category = category;
     if (type) query.type = type;
-    if (isAvailable) query.isAvaliable = isAvailable === 'true';
+    if (isAvailable) query.isAvailable = isAvailable === 'true';
+    if (_id) {
+      try {
+        query._id = new mongoose.Types.ObjectId(_id);
+        console.log('Searching for car with ID:', _id);
+        console.log('MongoDB query:', query);
+      } catch (err) {
+        console.error('ObjectId creation error:', err);
+        console.error('Invalid ObjectId:', _id);
+        return NextResponse.json(
+          { error: 'Invalid car ID format' },
+          { status: 400 }
+        );
+      }
+    }
 
     const cars = await db.collection("car_data").find(query).sort({ createdAt: -1 }).toArray();
+    console.log('Found cars:', cars.length);
     return NextResponse.json({ cars }, { status: 200 });
   } catch (err) {
     console.error('GET /api/cars error:', err);
@@ -37,6 +67,23 @@ export async function GET(request: NextRequest) {
   }
 }
 
+/**
+ * Handles POST requests to create a new car entry
+ * 
+ * @param request - Next.js request object containing the car data in the body
+ * @returns NextResponse with created car data or error message
+ * 
+ * @throws {Error} When required fields are missing
+ * @throws {mongoose.Error.ValidationError} When MongoDB validation fails
+ * 
+ * @example
+ * POST /api/cars
+ * Body: {
+ *   brand: "Toyota",
+ *   model: "Camry",
+ *   // ... other required fields
+ * }
+ */
 export async function POST(request: NextRequest) {
   try {
     // Connect to MongoDB
