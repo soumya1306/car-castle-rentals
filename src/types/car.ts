@@ -15,4 +15,5 @@ export interface Car {
   isAvailable: boolean;
   type: 'regular' | 'premium' | 'luxury';
   featured: boolean;
+  features: string[];
 }

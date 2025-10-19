@@ -4,7 +4,11 @@ import Link from "next/link";
 // Components
 import Button from "../Button";
 
-export default function DesktopNavbar() {
+interface DesktopNavbarProps {
+  currentRoute: string;
+}
+
+export default function DesktopNavbar({ currentRoute }: DesktopNavbarProps) {
   return (
     <div
       id="links"

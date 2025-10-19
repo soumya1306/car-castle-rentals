@@ -1,6 +1,8 @@
+"use client";
 // Next.js imports
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // Local assets
 import carCastleLogo from "@/assets/car castle.png";
@@ -10,6 +12,11 @@ import DesktopNavbar from "./DesktopNavbar";
 import MobileNavbar from "./MobileNavbar";
 
 export default function Navbar() {
+  const currentRoute = usePathname();
+
+  if (currentRoute.includes("login")) {
+    return null; // Hide the navbar on the login page and subsequent pages
+  }
 
   return (
     <nav className="flex items-center w-full border-b-1 border-primary/20">
@@ -21,7 +28,7 @@ export default function Navbar() {
             alt="Car Castle Logo"
           />
         </Link>
-        <DesktopNavbar />
+        <DesktopNavbar currentRoute={currentRoute} />
         <MobileNavbar />
       </div>
     </nav>

@@ -25,7 +25,7 @@ import {
 // Local imports
 import PhoneInput from "react-phone-input-2";
 
-import SpinLoader from "@/components/loaders/SpinLoader";
+import SpinLoader from "@/components/Loaders/SpinLoader";
 import { Car } from "@/types/car";
 
 interface CarDetailsPageProps {

@@ -1,9 +1,17 @@
+"use client";
+
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import React from "react";
 
 import logo from "@/assets/car castle.png";
 
 const Footer = () => {
+  const currentRoute = usePathname();
+
+  if (currentRoute.includes("/login")) {
+    return null; // Hide the footer on the login page and subsequent pages
+  }
   return (
     <div className="text-black pt-8 px-6 md:px-16 lg:px-24 mt-20 mx-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 lg:justify-center lg:justify-items-center gap-12">
