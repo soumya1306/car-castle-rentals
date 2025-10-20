@@ -47,59 +47,8 @@ const AddCar = () => {
 
       <form
         action={onCarCreate}
-        className="flex flex-col gap-5 text-primary/70 text-[16px] mt-6 max-w-xl mb-10"
+        className="flex flex-col gap-5 text-primary/70 text-[16px] mt-3 max-w-xl mb-10"
       >
-        {/* Cars Images */}
-        <div>
-          <label htmlFor="car-image" className="block text-sm mb-2">
-            Select Images{" "}
-            {imagePreviews.length > 0 &&
-              `(${imagePreviews.length} selected)`}
-          </label>
-
-          {
-            <div className="flex gap-4 mb-4">
-              {imagePreviews.length > 0 &&
-                imagePreviews.map((preview, index) => (
-                  <div key={index} className="relative w-41 h-32 shadow-md transition-all hover:shadow-2xl hover:scale-102 duration-500">
-                    <img
-                      src={URL.createObjectURL(preview)}
-                      alt={`Car Image ${index + 1}`}
-                      className="w-41 h-32 object-cover rounded border"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onRemoveImage(index);
-                      }}
-                      className="absolute -top-2 -right-2 bg-primary/80 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs cursor-pointer"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              <input
-                type="file"
-                name="imageArr"
-                id="car-image"
-                className="hidden"
-                ref={imageInputRef}
-                onChange={onUploadImage}
-                onClick={handleClearInput}
-                multiple
-                accept="image/*"
-              />
-              <button
-                type="button"
-                className="cursor-pointer border-dotted border-primary/50 border-1 w-41 h-32 rounded"
-                onClick={() => imageInputRef.current?.click()}
-              >
-                <LuCloudUpload className="inline mr-2" />
-                Upload Images
-              </button>
-            </div>
-          }
-        </div>
 
         {/* Car Model and Brand */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -240,6 +189,61 @@ const AddCar = () => {
           <FeatureSelector />
         </div>
 
+        {/* Cars Images */}
+        <div>
+          <label htmlFor="car-image" className="block mb-2">
+            Select Images{" "}
+            {imagePreviews.length > 0 &&
+              `(${imagePreviews.length} selected)`}
+            <p className="text-sm mt-2 text-primary/50 mb-2">
+              You can upload multiple images at once. First image will be the cover image.
+            </p>
+          </label>
+
+          {
+            <div className="flex gap-4 mb-4">
+              {imagePreviews.length > 0 &&
+                imagePreviews.map((preview, index) => (
+                  <div key={index} className="relative w-41 h-32 shadow-md transition-all hover:shadow-2xl hover:scale-102 duration-500">
+                    <img
+                      src={URL.createObjectURL(preview)}
+                      alt={`Car Image ${index + 1}`}
+                      className="w-41 h-32 object-cover rounded border"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onRemoveImage(index);
+                      }}
+                      className="absolute -top-2 -right-2 bg-primary/80 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs cursor-pointer"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              <input
+                type="file"
+                name="imageArr"
+                id="car-image"
+                className="hidden"
+                ref={imageInputRef}
+                onChange={onUploadImage}
+                onClick={handleClearInput}
+                multiple
+                accept="image/*"
+              />
+              <button
+                type="button"
+                className="cursor-pointer border-dotted border-primary/50 border-1 w-41 h-32 rounded"
+                onClick={() => imageInputRef.current?.click()}
+              >
+                <LuCloudUpload className="inline mr-2" />
+                Upload Images
+              </button>
+            </div>
+          }
+        </div>
+
         {/* Submit Button */}
         <div className="flex justify-end mt-6">
           <button
@@ -250,6 +254,8 @@ const AddCar = () => {
             <span className="mt-1">Add a new Car</span>
           </button>
         </div>
+
+        
       </form>
     </div>
   );

@@ -137,3 +137,104 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+/**
+ * Handles PUT requests to update an existing car
+ * 
+ * @param request - Next.js request object containing the car data and ID
+ * @returns NextResponse with updated car data or error message
+ * 
+ * @throws {Error} When car ID is missing or invalid
+ * @throws {Error} When car is not found
+ * 
+ * @example
+ * PUT /api/cars
+ * Body: {
+ *   _id: "car_id_here",
+ *   brand: "Updated Toyota",
+ *   model: "Updated Camry",
+ *   // ... other fields to update
+ * }
+ */
+export async function PUT(request: NextRequest) {
+  try {
+    // Connect to MongoDB
+    const client = await clientPromise;
+    const db = client.db("car_castle_data");
+
+    const body = await request.json();
+    const { _id, ...updateData } = body;
+
+    // Validate car ID
+    if (!_id) {
+      return NextResponse.json(
+        { error: 'Car ID is required for updating' },
+        { status: 400 }
+      );
+    }
+
+    let objectId: mongoose.Types.ObjectId;
+    try {
+      objectId = new mongoose.Types.ObjectId(_id);
+    } catch (err) {
+      console.error('Invalid ObjectId:', _id);
+      return NextResponse.json(
+        { error: 'Invalid car ID format' },
+        { status: 400 }
+      );
+    }
+
+    // Check if car exists
+    const existingCar = await db.collection("car_data").findOne({ _id: objectId });
+    if (!existingCar) {
+      return NextResponse.json(
+        { error: 'Car not found' },
+        { status: 404 }
+      );
+    }
+
+    // Add updated timestamp
+    const carUpdateData = {
+      ...updateData,
+      updatedAt: new Date()
+    };
+
+    // Update the car
+    const result = await db.collection("car_data").updateOne(
+      { _id: objectId },
+      { $set: carUpdateData }
+    );
+
+    if (result.modifiedCount === 0) {
+      return NextResponse.json(
+        { error: 'No changes were made to the car' },
+        { status: 400 }
+      );
+    }
+
+    // Fetch the updated car
+    const updatedCar = await db.collection("car_data").findOne({ _id: objectId });
+
+    return NextResponse.json({
+      message: "Car updated successfully",
+      car: updatedCar
+    }, { status: 200 });
+  } catch (err) {
+    console.error('PUT /api/cars error:', err);
+    
+    // Handle MongoDB validation errors
+    if (err instanceof mongoose.Error.ValidationError) {
+      return NextResponse.json(
+        { error: err.message },
+        { status: 400 }
+      );
+    }
+    
+    // Handle other errors
+    const error = err instanceof Error ? err.message : "Failed to update car";
+    return NextResponse.json(
+      { error },
+      { status: 500 }
+    );
+  }
+}
