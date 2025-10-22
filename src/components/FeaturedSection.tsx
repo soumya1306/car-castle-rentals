@@ -8,7 +8,7 @@ import { fetchApi } from "@/utils/api";
 
 import Button from "./Button";
 import CarCard from "./CarCard/CarCard";
-import GridLoader from "./Loaders/GridLoader";
+import GridLoader from "@/components/Loaders/GridLoader";
 import Title from "./Title";
 
 export default function FeaturedSection() {
