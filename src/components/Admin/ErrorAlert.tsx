@@ -1,6 +1,10 @@
-import { set } from "mongoose";
-
-export default function ErrorAlert({ message, setShowErrorBanner }: { message?: string, setShowErrorBanner: (show: boolean) => void }) {
+export default function ErrorAlert({
+  message,
+  setShowErrorBanner,
+}: {
+  message?: string;
+  setShowErrorBanner: (show: boolean) => void;
+}) {
   return (
     <div className="fixed bottom-25 right-0 flex items-center justify-between max-w-80 w-full bg-red-600/20 text-red-600 px-3 h-10 rounded-sm transition-all ease-in-out duration-300 shadow-md m-4">
       <div className="flex items-center">
@@ -24,7 +28,9 @@ export default function ErrorAlert({ message, setShowErrorBanner }: { message?: 
         type="button"
         aria-label="close"
         className="active:scale-90 transition-all ml-2 cursor-pointer text-red-500 hover:text-red-700"
-        onClick={() => { setShowErrorBanner(false); }}
+        onClick={() => {
+          setShowErrorBanner(false);
+        }}
       >
         <svg
           width="20"

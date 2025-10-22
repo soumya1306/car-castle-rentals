@@ -33,7 +33,7 @@ export default function FeatureSelector() {
           Select Features
         </h1>
         <p className="text-sm text-primary/50 mb-2">
-          All features are included by default. Remove any you don't need or add
+          All features are included by default. Remove any you don&apos;t need or add
           custom ones.
         </p>
 

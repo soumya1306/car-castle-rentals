@@ -179,7 +179,7 @@ export async function PUT(request: NextRequest) {
     } catch (err) {
       console.error('Invalid ObjectId:', _id);
       return NextResponse.json(
-        { error: 'Invalid car ID format' },
+        { error: 'Invalid car ID format', err },
         { status: 400 }
       );
     }

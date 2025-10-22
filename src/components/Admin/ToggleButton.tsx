@@ -3,11 +3,13 @@ import { useState } from "react";
 export default function ToggleButton({
   enabled,
   onToggle,
-  label,
+  checkedLabel,
+  uncheckedLabel,
 }: {
   enabled: boolean;
   onToggle: () => void;
-  label: string;
+  checkedLabel: string;
+  uncheckedLabel: string;
 }) {
     const [checked, setChecked] = useState<boolean>(enabled);
     const handleChange = () => {
@@ -37,7 +39,7 @@ export default function ToggleButton({
       
       {/* Text with fade transition */}
       <span className="relative z-10 transition-all duration-300">
-        {checked ? 'Available' : 'Unavailable'}
+        {checked ? checkedLabel : uncheckedLabel}
       </span>
     </button>
   );

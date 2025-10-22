@@ -6,7 +6,7 @@ interface DashboardCard {
   title: string;
   description: string;
   count: number;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   color: string;
 }
 

@@ -6,9 +6,10 @@ import Link from "next/link";
 import { LuCar, LuLayoutDashboard, LuSquarePlus } from "react-icons/lu";
 import { usePathname } from "next/dist/client/components/navigation";
 
+import profileImage from "@/assets/user-1808597_1920.png"
+
 const Sidebar = () => {
   // Replace with actual logic to get profileImage if needed
-  const profileImage = "";
   const currentPath = usePathname();
 
   const isActive = (path: string, exact = true) => {
@@ -23,7 +24,7 @@ const Sidebar = () => {
       <div className="group relative items-center flex flex-col">
         <label htmlFor="profileImage">
           <Image
-            src={profileImage || "/default-profile.png"}
+            src={profileImage}
             alt="Profile Image"
             width={120}
             height={120}

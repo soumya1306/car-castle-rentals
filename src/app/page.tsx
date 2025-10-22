@@ -2,7 +2,6 @@ import Image from "next/image";
 
 import mainCar from "@/assets/main_car.png";
 import FeaturedSection from "@/components/FeaturedSection";
-import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
