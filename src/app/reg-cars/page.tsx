@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import CarCard from "@/components/CarCard/CarCard";
-import GridLoader from "@/components/Loaders/GridLoader";
+import GridLoader from "@/components/loaders/GridLoader";
 import Title from "@/components/Title";
 import { Car } from "@/types/car";
 import { fetchApi } from "@/utils/api";
