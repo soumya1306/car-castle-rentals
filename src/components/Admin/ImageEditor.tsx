@@ -28,9 +28,9 @@ const ImageEditor = ({ car, onClose, onSave }: ImageEditorProps) => {
         }
         
         // Check file size (10MB limit)
-        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        const maxSize = 4 * 1024 * 1024; // 4MB in bytes
         if (file.size > maxSize) {
-          alert(`${file.name} is too large. Maximum size is 10MB`);
+          alert(`${file.name} is too large. Maximum size is 4MB`);
           return false;
         }
         
@@ -179,11 +179,11 @@ const ImageEditor = ({ car, onClose, onSave }: ImageEditorProps) => {
                 <img
                   src={imageUrl}
                   alt={`${car.brand} ${car.model} - ${index + 1}`}
-                  className="w-full h-32 object-cover rounded-lg border"
+                  className="w-full h-32 object-cover rounded-lg"
                 />
                 <button
                   onClick={() => removeExistingImage(index)}
-                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity hover:cursor:pointer"
                 >
                   <LuTrash2 size={12} />
                 </button>
@@ -237,7 +237,7 @@ const ImageEditor = ({ car, onClose, onSave }: ImageEditorProps) => {
               <p className="text-sm text-gray-500">
                 <span className="font-semibold">Click to upload</span> or drag and drop
               </p>
-              <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+              <p className="text-xs text-gray-500">PNG, JPG, GIF up to 4MB</p>
             </div>
             <input
               id="image-upload"
@@ -269,7 +269,7 @@ const ImageEditor = ({ car, onClose, onSave }: ImageEditorProps) => {
           <button
             onClick={handleSave}
             disabled={isUploading || newImages.length === 0}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-4 py-2 bg-primary/90 text-white rounded-lg hover:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isUploading ? (
               <div className="flex items-center gap-2">

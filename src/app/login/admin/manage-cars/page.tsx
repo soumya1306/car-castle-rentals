@@ -1,15 +1,17 @@
 "use client";
 
 import AdminTitle from "@/components/Admin/AdminTitle";
+import DeletePopup from "@/components/Admin/DeletePopup";
 import DropdownEditor from "@/components/Admin/DropdownEditor";
 import ErrorAlert from "@/components/Admin/ErrorAlert";
 import ImageEditor from "@/components/Admin/ImageEditor";
 import PriceEditor from "@/components/Admin/PriceEditor";
+import SuccessAlert from "@/components/Admin/SuccessAlert";
 import ToggleButton from "@/components/Admin/ToggleButton";
 import ToggleSwitch from "@/components/Admin/ToggleSwitch";
 import { Car } from "@/types/car";
 import { fetchApi } from "@/utils/api";
-import { updateCarData } from "@/utils/carUtils";
+import { deleteCarData, updateCarData } from "@/utils/carUtils";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { LuPencil, LuTrash2 } from "react-icons/lu";
@@ -19,9 +21,13 @@ const ManageCars = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<boolean>();
   const [showErrorBanner, setShowErrorBanner] = useState(false);
+  const [showSuccessBanner, setShowSuccessBanner] = useState(false);
 
   const [editingCarId, setEditingCarId] = useState<string | null>(null);
-  const [editingImageCarId, setEditingImageCarId] = useState<string | null>(null);
+  const [editingImageCarId, setEditingImageCarId] = useState<string | null>(
+    null
+  );
+  const [deletingCarId, setDeletingCarId] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadCars() {
@@ -106,10 +112,33 @@ const ManageCars = () => {
     }
   };
 
+  const handleCarRemove = async (carId: string) => {
+    try {
+      setDeletingCarId(carId); // Set loading state for this specific car
+      const result = await deleteCarData(carId);
+      
+      if (result.success) {
+        // Remove the deleted car from the local state
+        setCars(prevCars => prevCars.filter(car => car._id !== carId));
+        setShowSuccessBanner(true);
+      } else {
+        setShowErrorBanner(true);
+      }
+    } catch (error) {
+      console.error('Error deleting car:', error);
+      setShowErrorBanner(true);
+    } finally {
+      setDeletingCarId(null); // Clear loading state
+    }
+  };
+
   return (
     <div className=" px-4 md:px-10 w-full">
       {showErrorBanner && (
         <ErrorAlert setShowErrorBanner={setShowErrorBanner} />
+      )}
+      {showSuccessBanner && (
+        <SuccessAlert setShowSuccessBanner={setShowSuccessBanner} />
       )}
       <AdminTitle
         title="Manage Cars"
@@ -134,11 +163,13 @@ const ManageCars = () => {
               car._id ? (
                 <tr key={car._id} className="border-t border-primary/30">
                   <td className="p-3 flex">
-                    <div className="relative">
+                    <div className="relative mr-2">
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_BLOB_URL}/${car.imageArray[0].split('/').pop()}`}
+                        src={`${
+                          process.env.NEXT_PUBLIC_BLOB_URL
+                        }/${car.imageArray[0].split("/").pop()}`}
                         alt={`${car.brand} ${car.model}`}
-                        width={60}  
+                        width={60}
                         height={40}
                         className="inline-block mr-2 w-17 h-12 object-cover rounded"
                       />
@@ -170,7 +201,7 @@ const ManageCars = () => {
                   <td className="p-3 text-[15px] text-primary/70">
                     <PriceEditor
                       isPriceEditorMode={editingCarId === car._id}
-                      setIsPriceEditorMode={(isEditing: boolean) => 
+                      setIsPriceEditorMode={(isEditing: boolean) =>
                         setEditingCarId(isEditing && car._id ? car._id : null)
                       }
                       car={car}
@@ -193,8 +224,20 @@ const ManageCars = () => {
                   </td>
                   <td className="text-primary/50">
                     <div className="flex justify-center gap-4">
-                      <button className="text-red-500/80 cursor-pointer">
-                        {<LuTrash2 size={16} />}
+                      <button
+                        className={`cursor-pointer transition-colors ${
+                          deletingCarId === car._id 
+                            ? 'text-gray-400 cursor-not-allowed' 
+                            : 'text-red-500/80 hover:text-red-600'
+                        }`}
+                        disabled={deletingCarId === car._id}
+                        onClick={() => car._id && handleCarRemove(car._id)}
+                      >
+                        {deletingCarId === car._id ? (
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-400"></div>
+                        ) : (
+                          <LuTrash2 size={16} />
+                        )}
                       </button>
                     </div>
                   </td>
@@ -204,11 +247,11 @@ const ManageCars = () => {
           </tbody>
         </table>
       </div>
-      
+
       {/* Image Editor Popup */}
       {editingImageCarId && (
         <ImageEditor
-          car={cars.find(car => car._id === editingImageCarId)!}
+          car={cars.find((car) => car._id === editingImageCarId)!}
           onClose={() => setEditingImageCarId(null)}
           onSave={handleImageUpdate}
         />

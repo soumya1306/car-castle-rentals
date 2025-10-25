@@ -4,27 +4,107 @@ import AdminTitle from "@/components/Admin/AdminTitle";
 import CheckBox from "@/components/Admin/CheckBox";
 import FeatureSelector from "@/components/Admin/FeatureSelector";
 import { Car } from "@/types/car";
+import { uploadImagesToVercelBlob } from "@/utils/uploadImages";
 import React, { useRef, useState } from "react";
-import { LuCloudUpload, LuPlus } from "react-icons/lu";
+import { LuCloudUpload, LuPlus, LuX } from "react-icons/lu";
+import { createCarData } from "@/utils/carUtils";
+import SuccessAlert from "@/components/Admin/SuccessAlert";
+import ErrorAlert from "@/components/Admin/ErrorAlert";
 
 const AddCar = () => {
-  const [imageLinksArray, setImageLinksArray] = useState<string[]>([]);
   const [features, setFeatures] = useState<string[]>([]);
   const [imagePreviews, setImagePreviews] = useState<File[]>([]);
-  const [carData, setCarData] = useState<Car>();
-  console.log(imagePreviews);
+  const [carData, setCarData] = useState<Car>({} as Car);
+  const [isUploading, setIsUploading] = useState(false);
+  const [showSuccessBanner, setShowSuccessBanner] = useState(false);
+  const [showErrorBanner, setShowErrorBanner] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<{
+    completed: number;
+    total: number;
+    currentFile: string;
+  } | null>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
-  const onCarCreate = async (formData: FormData) => {};
+  const onCarCreate = async (formData: FormData) => {
+    try {
+      setIsUploading(true);
+      setUploadProgress(null);
 
+      // Generate a temporary UUID for image naming (not for database)
+      const tempId = crypto.randomUUID();
+      
+      // Upload images first with progress tracking using temp ID
+      const uploadedImageUrls = await uploadImagesToVercelBlob(
+        tempId,
+        imagePreviews,
+        (progress) => {
+          setUploadProgress(progress);
+        }
+      );
+
+      // Build car data (without _id - let MongoDB generate it)
+      const newCarData: Omit<Car, '_id'> = {
+        brand: formData.get("brand") as string,
+        model: formData.get("model") as string,
+        year: parseInt(formData.get("year") as string, 10),
+        pricePerDay: parseFloat(
+          (formData.get("pricePerDay") as string).replace("₹", "").trim()
+        ),
+        category: formData.get("category") as
+          | "Hatchback"
+          | "SUV"
+          | "MPV"
+          | "Sedan"
+          | "Luxury"
+          | "Sports",
+        transmission: formData.get("transmission") as
+          | "Manual"
+          | "Automatic",
+        fuel_type: formData.get("fuelType") as
+          | "Petrol"
+          | "Diesel"
+          | "Hybrid"
+          | "Electric",
+        seating_capacity: parseInt(
+          formData.get("seatingCapacity") as string,
+          10
+        ),
+        type: formData.get("type") as "regular" | "premium",
+        featured: formData.get("featured") === "on" ? true : false,
+        description: formData.get("description") as string,
+        features: features,
+        isAvailable: true,
+        imageArray: uploadedImageUrls, // Set the uploaded image URLs
+        image: uploadedImageUrls[0] || "", // Set the first image as the main image
+        location: "Default Location", // TODO: Add location field to form
+      };
+
+      const response = await createCarData(newCarData);
+      if (response.success) {
+        setShowSuccessBanner(true);
+      }else {
+        setShowErrorBanner(true);
+      }
+    } catch (error) {
+      console.error("Error creating car:", error);
+      // Handle error (show toast, alert, etc.)
+      alert(
+        `Error: ${
+          error instanceof Error ? error.message : "Failed to create car"
+        }`
+      );
+    } finally {
+      setIsUploading(false);
+      setUploadProgress(null);
+      setImagePreviews([]);
+    }
+  };
   const onUploadImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    console.log(files);
     if (files) {
       const fileArray = Array.from(files);
       setImagePreviews((prev) => {
         const newPreviews = [...prev, ...fileArray];
-        console.log("New previews:", newPreviews);
         return newPreviews;
       });
     }
@@ -45,11 +125,49 @@ const AddCar = () => {
         subtitle="Add a new car by providing all the details"
       />
 
+      {showSuccessBanner && (
+        <SuccessAlert setShowSuccessBanner={setShowSuccessBanner} message="Car added successfully"/>
+      )}
+
+      {showErrorBanner && (
+        <ErrorAlert setShowErrorBanner={setShowErrorBanner} message="Failed to add car"/>
+      )}
+
+      {/* Upload Progress Indicator */}
+      {uploadProgress && (
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-blue-700">
+              Uploading Images... ({uploadProgress.completed}/
+              {uploadProgress.total})
+            </span>
+            <span className="text-sm text-blue-600">
+              {Math.round(
+                (uploadProgress.completed / uploadProgress.total) * 100
+              )}
+              %
+            </span>
+          </div>
+          <div className="w-full bg-blue-200 rounded-full h-2">
+            <div
+              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+              style={{
+                width: `${
+                  (uploadProgress.completed / uploadProgress.total) * 100
+                }%`,
+              }}
+            ></div>
+          </div>
+          <p className="text-xs text-blue-600 mt-1">
+            Current: {uploadProgress.currentFile}
+          </p>
+        </div>
+      )}
+
       <form
         action={onCarCreate}
         className="flex flex-col gap-5 text-primary/70 text-[16px] mt-3 max-w-xl mb-10"
       >
-
         {/* Car Model and Brand */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col w-full ">
@@ -164,9 +282,7 @@ const AddCar = () => {
               <option value="premium">Premium</option>
             </select>
           </div>
-          <div className="flex flex-col w-full ">
-
-          </div>
+          <div className="flex flex-col w-full "></div>
           <div className="flex flex-col w-full justify-end items-end">
             <CheckBox id="featured" label="Featured" name="featured" />
           </div>
@@ -186,17 +302,17 @@ const AddCar = () => {
 
         {/* Additional Features */}
         <div className="flex flex-col w-full ">
-          <FeatureSelector />
+          <FeatureSelector features={features} setFeatures={setFeatures} />
         </div>
 
         {/* Cars Images */}
         <div>
           <label htmlFor="car-image" className="block mb-2">
             Select Images{" "}
-            {imagePreviews.length > 0 &&
-              `(${imagePreviews.length} selected)`}
+            {imagePreviews.length > 0 && `(${imagePreviews.length} selected)`}
             <p className="text-sm mt-2 text-primary/50 mb-2">
-              You can upload multiple images at once. First image will be the cover image.
+              You can upload multiple images at once. First image will be the
+              cover image.
             </p>
           </label>
 
@@ -204,11 +320,14 @@ const AddCar = () => {
             <div className="flex gap-4 mb-4">
               {imagePreviews.length > 0 &&
                 imagePreviews.map((preview, index) => (
-                  <div key={index} className="relative w-41 h-32 shadow-md transition-all hover:shadow-2xl hover:scale-102 duration-500">
+                  <div
+                    key={index}
+                    className="relative w-41 h-32 shadow-md transition-all hover:shadow-2xl hover:scale-102 duration-500"
+                  >
                     <img
                       src={URL.createObjectURL(preview)}
                       alt={`Car Image ${index + 1}`}
-                      className="w-41 h-32 object-cover rounded border"
+                      className="w-41 h-32 object-cover rounded"
                     />
                     <button
                       type="button"
@@ -217,7 +336,7 @@ const AddCar = () => {
                       }}
                       className="absolute -top-2 -right-2 bg-primary/80 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs cursor-pointer"
                     >
-                      ×
+                      <LuX />
                     </button>
                   </div>
                 ))}
@@ -248,14 +367,26 @@ const AddCar = () => {
         <div className="flex justify-end mt-6">
           <button
             type="submit"
-            className="bg-primary text-white px-2 py-1 flex rounded-md"
+            disabled={isUploading}
+            className={`px-6 py-3 flex items-center rounded-md transition-all ${
+              isUploading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-primary hover:bg-primary/90"
+            } text-white`}
           >
-            <LuPlus className="m-1 w-6 h-6" />
-            <span className="mt-1">Add a new Car</span>
+            {isUploading ? (
+              <>
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                <span>Uploading Images...</span>
+              </>
+            ) : (
+              <>
+                <LuPlus className="mr-2 w-5 h-5" />
+                <span>Add New Car</span>
+              </>
+            )}
           </button>
         </div>
-
-        
       </form>
     </div>
   );

@@ -1,8 +1,28 @@
-import { put } from "@vercel/blob";
+import { put, del } from "@vercel/blob";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
+    // Check authentication
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    // Verify token
+    const { verifyToken } = await import('@/utils/auth');
+    const token = authHeader.substring(7);
+    const payload = verifyToken(token);
+
+    if (!payload || payload.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      );
+    }
     const formData = await request.formData();
     const file = formData.get("file");
     const filename = formData.get("filename");
@@ -60,6 +80,53 @@ export async function GET(request: Request): Promise<NextResponse> {
     console.error("URL generation error:", error);
     return NextResponse.json(
       { error: "Failed to generate URL" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request): Promise<NextResponse> {
+  try {
+    // Check authentication
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    // Verify token
+    const { verifyToken } = await import('@/utils/auth');
+    const token = authHeader.substring(7);
+    const payload = verifyToken(token);
+
+    if (!payload || payload.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      );
+    }
+    const { imageUrl } = await request.json();
+
+    if (!imageUrl || typeof imageUrl !== "string") {
+      return NextResponse.json(
+        { error: "Image URL is required" },
+        { status: 400 }
+      );
+    }
+
+    // Delete the image from Vercel Blob storage
+    await del(imageUrl);
+
+    return NextResponse.json({
+      success: true,
+      message: "Image deleted successfully"
+    });
+  } catch (error) {
+    console.error("Image deletion error:", error);
+    return NextResponse.json(
+      { error: "Failed to delete image" },
       { status: 500 }
     );
   }

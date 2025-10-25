@@ -1,4 +1,5 @@
 import { Car } from "@/types/car";
+import { getAuthHeaders } from "@/utils/auth";
 
 /**
  * Custom function to update car data via API
@@ -29,6 +30,7 @@ export async function updateCarData(carData: Partial<Car> & { _id: string }) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
+        ...getAuthHeaders(),
       },
       body: JSON.stringify(carData)
     });
@@ -56,17 +58,21 @@ export async function updateCarData(carData: Partial<Car> & { _id: string }) {
 /**
  * Custom function to create a new car via API
  * 
- * @param carData - The complete car object to create
+ * @param carData - The complete car object to create (without _id, MongoDB will generate it)
  * @returns Promise with the created car data or error
  */
-export async function createCarData(carData: Omit<Car, '_id'>) {
+export async function createCarData(carData: Omit<Car, '_id'>) { 
   try {
+    // Remove any _id field if present (MongoDB will generate a new one)
+    const { _id, ...carDataWithoutId } = carData as Omit<Car, '_id'> & { _id?: string };
+    
     const response = await fetch('/api/cars', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        ...getAuthHeaders(),
       },
-      body: JSON.stringify(carData)
+      body: JSON.stringify(carDataWithoutId)
     });
 
     const result = await response.json();
@@ -99,6 +105,9 @@ export async function deleteCarData(carId: string) {
   try {
     const response = await fetch(`/api/cars?_id=${carId}`, {
       method: 'DELETE',
+      headers: {
+        ...getAuthHeaders(),
+      },
     });
 
     const result = await response.json();

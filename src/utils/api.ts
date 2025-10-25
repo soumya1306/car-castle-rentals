@@ -18,7 +18,6 @@ export async function fetchApi<T>(
     }
 
     const data = await response.json();
-    // console.log(data)
     return { data };
   } catch (error) {
     return {

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import clientPromise from "@/lib/mongodb";
 import { Car } from "@/types/car";
+import { deleteImagesFromVercelBlob } from "@/utils/uploadImages";
 
 /**
  * Handles GET requests to fetch cars from the database
@@ -92,14 +93,17 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     
+    // Remove any client-provided _id (MongoDB will generate its own)
+    const { _id, ...carDataWithoutId } = body;
+    
     // Validate required fields
-    const requiredFields: (keyof Car)[] = [
+    const requiredFields: (keyof Omit<Car, '_id'>)[] = [
       'brand', 'model', 'image', 'imageArray', 'year', 'category',
       'seating_capacity', 'fuel_type', 'transmission', 'pricePerDay',
       'location', 'description', 'type'
     ];
 
-    const missingFields = requiredFields.filter(field => !body[field]);
+    const missingFields = requiredFields.filter(field => !carDataWithoutId[field]);
     if (missingFields.length > 0) {
       return NextResponse.json(
         { error: `Missing required fields: ${missingFields.join(', ')}` },
@@ -107,16 +111,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create new car document
-    const result = await db.collection("car_data").insertOne(body);
+    // Add creation timestamp
+    const carDocument = {
+      ...carDataWithoutId,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    // Create new car document (MongoDB will auto-generate ObjectId)
+    const result = await db.collection("car_data").insertOne(carDocument);
     
     if (!result.insertedId) {
       throw new Error("Failed to insert car into database");
     }
 
+    console.log('Car created successfully with ID:', result.insertedId);
+
     return NextResponse.json({
       message: "Car added successfully",
-      car: { ...body, _id: result.insertedId }
+      car: { 
+        ...carDocument, 
+        _id: result.insertedId.toString() // Convert ObjectId to string for client
+      }
     }, { status: 201 });
   } catch (err) {
     console.error('POST /api/cars error:', err);
@@ -232,6 +248,123 @@ export async function PUT(request: NextRequest) {
     
     // Handle other errors
     const error = err instanceof Error ? err.message : "Failed to update car";
+    return NextResponse.json(
+      { error },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * Handles DELETE requests to remove a car from the database
+ * 
+ * @param request - Next.js request object containing query parameters
+ * @returns NextResponse with success message or error
+ * 
+ * @example
+ * // Delete a car by ID
+ * DELETE /api/cars?_id=507f1f77bcf86cd799439011
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    // Get the car ID from query parameters
+    const { searchParams } = new URL(request.url);
+    const _id = searchParams.get('_id');
+
+    // Validate car ID
+    if (!_id) {
+      return NextResponse.json(
+        { error: 'Car ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Connect to MongoDB
+    const client = await clientPromise;
+    const db = client.db("car_castle_data");
+
+    // Convert string ID to ObjectId
+    let objectId: mongoose.Types.ObjectId;
+    try {
+      objectId = new mongoose.Types.ObjectId(_id);
+      console.log('Deleting car with ID:', _id);
+    } catch (err) {
+      console.error('Invalid ObjectId:', _id);
+      return NextResponse.json(
+        { error: 'Invalid car ID format' },
+        { status: 400 }
+      );
+    }
+
+    // Check if car exists before deletion
+    const existingCar = await db.collection("car_data").findOne({ _id: objectId });
+    
+    if (!existingCar) {
+      return NextResponse.json(
+        { error: 'Car not found' },
+        { status: 404 }
+      );
+    }
+
+    // Collect all image URLs that need to be deleted
+    const imagesToDelete: string[] = [];
+    if (existingCar.image) {
+      imagesToDelete.push(existingCar.image);
+    }
+    if (existingCar.imageArray && Array.isArray(existingCar.imageArray)) {
+      imagesToDelete.push(...existingCar.imageArray);
+    }
+
+    // Delete images from Vercel Blob storage first (before deleting from database)
+    if (imagesToDelete.length > 0) {
+      console.log('Deleting images from Vercel Blob storage:', imagesToDelete.length);
+      try {
+        await deleteImagesFromVercelBlob(imagesToDelete);
+        console.log('Images deleted successfully from Vercel Blob storage');
+      } catch (imageError) {
+        console.warn('Warning: Some images may not have been deleted from storage:', imageError);
+        // Continue with car deletion even if image deletion fails
+      }
+    }
+
+    // Delete the car from database
+    const deleteResult = await db.collection("car_data").deleteOne({ _id: objectId });
+
+    if (deleteResult.deletedCount === 0) {
+      return NextResponse.json(
+        { error: 'Failed to delete car' },
+        { status: 500 }
+      );
+    }
+
+    console.log('Car deleted successfully:', _id);
+
+    // Return success response with deleted car data
+    return NextResponse.json({
+      success: true,
+      message: 'Car deleted successfully',
+      deletedCar: {
+        _id: _id,
+        brand: existingCar.brand,
+        model: existingCar.model,
+        year: existingCar.year
+      }
+    }, { status: 200 });
+
+  } catch (err) {
+    console.error('DELETE /api/cars error:', err);
+    
+    // Handle specific MongoDB errors
+    if (err instanceof Error) {
+      if (err.message.includes('timeout')) {
+        return NextResponse.json(
+          { error: 'Database connection timeout. Please try again.' },
+          { status: 504 }
+        );
+      }
+    }
+
+    const error = err instanceof Error ? err.message : "Failed to delete car";
     return NextResponse.json(
       { error },
       { status: 500 }

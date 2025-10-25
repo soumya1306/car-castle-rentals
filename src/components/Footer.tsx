@@ -25,7 +25,8 @@ const Footer = () => {
             className="mb-4"
           />
           <p className="text-sm">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
+            Car Castle Rentals offers reliable, budget-friendly, and premium cars for every journey. Enjoy hassle-free bookings, transparent pricing, and top-notch service—drive with confidence and comfort every time.
+
           </p>
           <div className="flex items-center gap-3 mt-4">
             {/* Instagram */}
@@ -48,7 +49,7 @@ const Footer = () => {
         </div>
 
         {/* Company */}
-        <div className="max-w-80 flex flex-col items-start lg:items-center ">
+        <div className="max-w-80 flex flex-col items-start lg:items-start ">
           <p className="text-lg text-gray-800 font-bold">COMPANY</p>
           <ul className="mt-3 flex flex-col gap-2 ">
             <li>
@@ -72,7 +73,7 @@ const Footer = () => {
         {/* Support */}
         <div className="max-w-80 flex flex-col items-start lg:items-center">
           <p className="text-xl text-gray-800 lg:-ml-18 font-bold">SUPPORT</p>
-          <ul className="mt-3 flex flex-col gap-2 ">
+          <ul className="mt-3 -ml-3 flex flex-col gap-2 ">
             <li>
               <a href="#">Help Center</a>
             </li>
