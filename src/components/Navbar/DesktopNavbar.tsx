@@ -38,7 +38,9 @@ export default function DesktopNavbar({ currentRoute }: DesktopNavbarProps) {
       >
         Premium Cars
       </Link>
-      <Button>Admin Login</Button>
+      <Link href="/login">
+        <Button>Admin Login</Button>
+      </Link>
     </div>
   );
 }

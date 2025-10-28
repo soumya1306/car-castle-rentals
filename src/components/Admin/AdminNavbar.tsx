@@ -26,7 +26,7 @@ const AdminNavbar = () => {
   };
 
   return (
-    <nav className="flex items-center w-full border-b-1 border-primary/20 bg-white shadow-sm">
+    <nav className="flex items-center w-full border-b-1 border-primary/20 shadow-sm">
       <div className="flex items-center lg:mx-18 justify-between w-full px-4">
         <Link href="/">
           <Image
@@ -38,7 +38,6 @@ const AdminNavbar = () => {
         
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 text-gray-700">
-            <LuUser className="w-5 h-5" />
             <span className="hidden md:block">
               Hi! {user?.email || 'Admin'}
             </span>
@@ -50,7 +49,7 @@ const AdminNavbar = () => {
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-3 py-2 text-sm bg-red-600/10 text-red-600 hover:text-red-600 hover:bg-red-600/20 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             title="Logout"
           >
             {isLoggingOut ? (

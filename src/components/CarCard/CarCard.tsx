@@ -22,7 +22,7 @@ export default function CarCard({ car, type }: CarCardProps) {
     >
       <div className="relative w-full h-48 mb-2">
         <Image
-          src={`${process.env.NEXT_PUBLIC_BLOB_URL}/thar-black.jpg`}
+          src={`${process.env.NEXT_PUBLIC_BLOB_URL}/${car.imageArray[0].split("/").pop()}`}
           alt={`${car.brand} ${car.model}`}
           fill
           className="object-cover rounded w-full h-full transition-transform duration-500 hover:scale-105"

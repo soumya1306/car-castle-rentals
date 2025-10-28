@@ -13,7 +13,7 @@ const CheckBox = ({
     <div className="flex flex-wrap items-end gap-6 md:gap-14 text-primary/60">
       <label className="flex gap-3 items-center cursor-pointer relative">
         <input id={id} name={name} type="checkbox" className="hidden peer" />
-        <span className="w-5 h-5 border border-slate-300 rounded relative flex items-center justify-center peer-checked:text-primary/60"></span>
+        <span className="w-5 h-5 border bg-white border-slate-300 rounded relative flex items-center justify-center peer-checked:text-primary/60"></span>
         <svg
           className="absolute hidden peer-checked:inline left-1 top-1/2 transform -translate-y-1/2"
           width="11"

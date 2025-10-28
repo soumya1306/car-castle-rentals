@@ -33,7 +33,7 @@ const Sidebar = () => {
         </label>
         <h2 className="mt-2">Hi! Admin</h2>
       </div>
-      <div className="mt-10 w-full ">
+      <div className="mt-10 w-full flex flex-col items-center md:flex md:flex-row ">
         <div className="flex w-full flex-col items-start">
           <Link
             href="/login/admin/dashboard"

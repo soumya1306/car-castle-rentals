@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { LuX, LuUpload, LuTrash2 } from "react-icons/lu";
 import { Car } from "@/types/car";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ImageEditorProps {
   car: Car;
@@ -9,6 +10,7 @@ interface ImageEditorProps {
 }
 
 const ImageEditor = ({ car, onClose, onSave }: ImageEditorProps) => {
+  const { user } = useAuth();
   const [imageArray, setImageArray] = useState<string[]>(car.imageArray || []);
   const [newImages, setNewImages] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -94,6 +96,18 @@ const ImageEditor = ({ car, onClose, onSave }: ImageEditorProps) => {
   };
 
   const handleSave = async () => {
+    // Check if user is authenticated
+    if (!user) {
+      alert('You must be logged in as an admin to upload images.');
+      return;
+    }
+
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      alert('Authentication token not found. Please log in again.');
+      return;
+    }
+
     setIsUploading(true);
     setUploadProgress('');
     
@@ -111,13 +125,24 @@ const ImageEditor = ({ car, onClose, onSave }: ImageEditorProps) => {
           formData.append('file', file);
           formData.append('filename', `${car._id}-${Date.now()}-${index}-${file.name}`);
           
+          // Get token from localStorage
+          const token = localStorage.getItem('accessToken');
+          
           const response = await fetch('/api/upload', {
             method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
             body: formData,
           });
           
           if (!response.ok) {
             const errorData = await response.json();
+            if (response.status === 401) {
+              throw new Error('Authentication failed. Please log in again.');
+            } else if (response.status === 403) {
+              throw new Error('Admin access required to upload images.');
+            }
             throw new Error(errorData.error || `Failed to upload ${file.name}`);
           }
           

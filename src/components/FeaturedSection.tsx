@@ -47,7 +47,7 @@ export default function FeaturedSection() {
 
 
   return (
-    <div className="flex flex-col items-center py-24 px-6 md:px-16 xl:px-32">
+    <section id="featured" className="flex flex-col items-center py-24 px-6 md:px-16 xl:px-32">
       <div>
         <Title
           title="Featured Cars"
@@ -61,9 +61,15 @@ export default function FeaturedSection() {
         ))}
       </div>
       <div className="mt-12">
-        <Button onClick={() => router.push("/reg-cars")}>View All Cars</Button>
+             <button
+             onClick={() => router.push("/reg-cars")}
+        type="submit"
+        className="mt-5 bg-primary text-white h-12 w-56 px-4 rounded active:scale-95 transition"
+      >
+        View All Cars
+      </button>
       </div>
-    </div>
+    </section>
 
   );
 }

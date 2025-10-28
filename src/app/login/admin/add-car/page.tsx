@@ -166,7 +166,7 @@ const AddCar = () => {
 
       <form
         action={onCarCreate}
-        className="flex flex-col gap-5 text-primary/70 text-[16px] mt-3 max-w-xl mb-10"
+        className="flex flex-col gap-5 text-primary/90 text-[16px] mt-3 max-w-3xl mb-10"
       >
         {/* Car Model and Brand */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -176,7 +176,7 @@ const AddCar = () => {
               type="text"
               id="brand"
               name="brand"
-              className="px-3 py-2 mt-1 border border-gray-300 focus:border-primary/50 rounded-md outline-none"
+              className="px-3 py-2 mt-1 border bg-white border-gray-300 focus:border-primary/50 rounded-md outline-none"
               placeholder="e.g., Toyota, Ford, BMW"
             />
           </div>
@@ -186,7 +186,7 @@ const AddCar = () => {
               type="text"
               id="model"
               name="model"
-              className="px-3 py-2 mt-1 border border-gray-300 focus:border-primary/50 rounded-md outline-none"
+              className="px-3 py-2 mt-1 border bg-white border-gray-300 focus:border-primary/50 rounded-md outline-none"
               placeholder="e.g., Corolla, Mustang, X5"
             />
           </div>
@@ -200,7 +200,7 @@ const AddCar = () => {
               type="text"
               id="year"
               name="year"
-              className="px-3 py-2 mt-1 border border-gray-300 focus:border-primary/50 rounded-md outline-none"
+              className="px-3 py-2 mt-1 border bg-white border-gray-300 focus:border-primary/50 rounded-md outline-none"
               placeholder="e.g., 2020, 2021, 2022"
             />
           </div>
@@ -211,7 +211,7 @@ const AddCar = () => {
               id="pricePerDay"
               name="pricePerDay"
               defaultValue={"₹"}
-              className="px-3 py-2 mt-1 border border-gray-300 focus:border-primary/50 rounded-md outline-none"
+              className="px-3 py-2 mt-1 border bg-white border-gray-300 focus:border-primary/50 rounded-md outline-none"
               placeholder="e.g., 50, 75, 100"
             />
           </div>
@@ -220,7 +220,7 @@ const AddCar = () => {
             <select
               id="category"
               name="category"
-              className="px-3 py-2 mt-1 border border-gray-300 focus:border-primary/50  rounded-md outline-none"
+              className="px-3 py-2 mt-1 border bg-white border-gray-300 focus:border-primary/50  rounded-md outline-none"
             >
               <option value="SUV">SUV</option>
               <option value="Sedan">Sedan</option>
@@ -239,7 +239,7 @@ const AddCar = () => {
             <select
               id="transmission"
               name="transmission"
-              className="px-3 py-2 mt-1 border border-gray-300 focus:border-primary/50 rounded-md outline-none"
+              className="px-3 py-2 mt-1 border bg-white border-gray-300 focus:border-primary/50 rounded-md outline-none"
             >
               <option value="Automatic">Automatic</option>
               <option value="Manual">Manual</option>
@@ -250,7 +250,7 @@ const AddCar = () => {
             <select
               id="fuelType"
               name="fuelType"
-              className="px-3 py-2 mt-1 border border-gray-300 focus:border-primary/50 rounded-md outline-none"
+              className="px-3 py-2 mt-1 border bg-white border-gray-300 focus:border-primary/50 rounded-md outline-none"
             >
               <option value="Petrol">Petrol</option>
               <option value="Diesel">Diesel</option>
@@ -263,7 +263,7 @@ const AddCar = () => {
               type="number"
               id="seatingCapacity"
               name="seatingCapacity"
-              className="px-3 py-2 mt-1 border border-gray-300 focus:border-primary/50 rounded-md outline-none"
+              className="px-3 py-2 mt-1 border bg-white border-gray-300 focus:border-primary/50 rounded-md outline-none"
               placeholder="e.g., 4, 5, 7"
             />
           </div>
@@ -276,7 +276,7 @@ const AddCar = () => {
             <select
               id="type"
               name="type"
-              className="px-3 py-2 mt-1 border border-gray-300 focus:border-primary/50 rounded-md outline-none"
+              className="px-3 py-2 mt-1 border bg-white border-gray-300 focus:border-primary/50 rounded-md outline-none"
             >
               <option value="regular">Regular</option>
               <option value="premium">Premium</option>
@@ -295,7 +295,7 @@ const AddCar = () => {
             id="description"
             name="description"
             rows={4}
-            className="px-3 py-2 mt-1 border border-gray-300 focus:border-primary/50 rounded-md outline-none"
+            className="px-3 py-2 mt-1 border bg-white border-gray-300 focus:border-primary/50 rounded-md outline-none"
             placeholder="Provide a brief description of the car"
           ></textarea>
         </div>
@@ -353,7 +353,7 @@ const AddCar = () => {
               />
               <button
                 type="button"
-                className="cursor-pointer border-dotted border-primary/50 border-1 w-41 h-32 rounded"
+                className="cursor-pointer bg-white border-dotted border-primary/50 border-1 w-41 h-32 rounded"
                 onClick={() => imageInputRef.current?.click()}
               >
                 <LuCloudUpload className="inline mr-2" />

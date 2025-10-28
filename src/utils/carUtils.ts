@@ -224,3 +224,153 @@ export async function updateCarPricing(carId: string, pricePerDay: number) {
     pricePerDay
   });
 }
+
+/**
+ * Get car counts by type and total
+ * 
+ * @returns Promise with car count statistics
+ * 
+ * @example
+ * const stats = await getCarCounts();
+ * console.log(stats);
+ * // {
+ * //   total: 25,
+ * //   premium: 10,
+ * //   regular: 15,
+ * //   available: 20,
+ * //   unavailable: 5
+ * // }
+ */
+export async function getCarCounts() {
+  try {
+    // Fetch all cars
+    const allCarsResponse = await fetch('/api/cars');
+    
+    if (!allCarsResponse.ok) {
+      throw new Error('Failed to fetch cars');
+    }
+    
+    const allCarsData = await allCarsResponse.json();
+    const cars: Car[] = allCarsData.cars || [];
+    
+    // Calculate counts
+    const total = cars.length;
+    const premium = cars.filter(car => car.type === 'premium' || car.type === 'luxury').length;
+    const regular = cars.filter(car => car.type === 'regular').length;
+    const available = cars.filter(car => car.isAvailable === true).length;
+    const unavailable = cars.filter(car => car.isAvailable === false).length;
+    
+    return {
+      success: true,
+      counts: {
+        total,
+        premium,
+        regular,
+        available,
+        unavailable
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching car counts:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+      counts: {
+        total: 0,
+        premium: 0,
+        regular: 0,
+        available: 0,
+        unavailable: 0
+      }
+    };
+  }
+}
+
+/**
+ * Get detailed car statistics including counts by category and type
+ * 
+ * @returns Promise with detailed car statistics
+ * 
+ * @example
+ * const stats = await getDetailedCarStats();
+ * console.log(stats);
+ * // {
+ * //   total: 25,
+ * //   byType: { regular: 15, premium: 8, luxury: 2 },
+ * //   byCategory: { SUV: 10, Sedan: 8, Hatchback: 5, Luxury: 2 },
+ * //   byAvailability: { available: 20, unavailable: 5 },
+ * //   byFuelType: { Petrol: 15, Diesel: 8, Electric: 2 }
+ * // }
+ */
+export async function getDetailedCarStats() {
+  try {
+    // Fetch all cars
+    const allCarsResponse = await fetch('/api/cars');
+    
+    if (!allCarsResponse.ok) {
+      throw new Error('Failed to fetch cars');
+    }
+    
+    const allCarsData = await allCarsResponse.json();
+    const cars: Car[] = allCarsData.cars || [];
+    
+    // Calculate detailed statistics
+    const total = cars.length;
+    
+    // Group by type
+    const byType = cars.reduce((acc, car) => {
+      acc[car.type] = (acc[car.type] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    // Group by category
+    const byCategory = cars.reduce((acc, car) => {
+      acc[car.category] = (acc[car.category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    // Group by availability
+    const byAvailability = {
+      available: cars.filter(car => car.isAvailable === true).length,
+      unavailable: cars.filter(car => car.isAvailable === false).length
+    };
+    
+    // Group by fuel type
+    const byFuelType = cars.reduce((acc, car) => {
+      acc[car.fuel_type] = (acc[car.fuel_type] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+    
+    // Group by featured status
+    const byFeatured = {
+      featured: cars.filter(car => car.featured === true).length,
+      notFeatured: cars.filter(car => car.featured === false).length
+    };
+    
+    return {
+      success: true,
+      stats: {
+        total,
+        byType,
+        byCategory,
+        byAvailability,
+        byFuelType,
+        byFeatured
+      }
+    };
+  } catch (error) {
+    console.error('Error fetching detailed car stats:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error occurred',
+      stats: {
+        total: 0,
+        byType: {},
+        byCategory: {},
+        byAvailability: { available: 0, unavailable: 0 },
+        byFuelType: {},
+        byFeatured: { featured: 0, notFeatured: 0 }
+      }
+    };
+  }
+}

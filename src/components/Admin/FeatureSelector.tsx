@@ -48,7 +48,7 @@ export default function FeatureSelector({features, setFeatures}: {features: stri
               <button
                 key={feature}
                 type="button"
-                className="px-2 py-1 rounded-full text-[12px] font-medium transition-all duration-200 flex items-center text-primary/70 border-1 border-primary/30"
+                className="px-2 py-1 rounded-full text-[12px] bg-white font-medium transition-all duration-200 flex items-center text-primary/70 border-1 border-primary/30"
               >
                 {feature}
                 <LuX
@@ -78,7 +78,7 @@ export default function FeatureSelector({features, setFeatures}: {features: stri
                 }
               }}
               placeholder="Enter custom feature name..."
-              className="px-3 w-full py-2 border border-gray-300 focus:border-primary/50 rounded-md outline-none"
+              className="px-3 w-full py-2 border bg-white border-gray-300 focus:border-primary/50 rounded-md outline-none"
             />
             <button
               type="button"

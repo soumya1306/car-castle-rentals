@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import React from "react";
 
 import logo from "@/assets/car castle.png";
+import { LuMail, LuPhone } from "react-icons/lu";
 
 const Footer = () => {
   const currentRoute = usePathname();
@@ -49,54 +50,54 @@ const Footer = () => {
         </div>
 
         {/* Company */}
-        <div className="max-w-80 flex flex-col items-start lg:items-start ">
+        <div className="max-w-80 flex flex-col items-start lg:items-start mt-4  ">
           <p className="text-lg text-gray-800 font-bold">COMPANY</p>
-          <ul className="mt-3 flex flex-col gap-2 ">
+          <ul className="mt-3 flex flex-col gap-4 ">
             <li>
-              <a href="#">About</a>
+              <a href="#about">About</a>
             </li>
             <li>
-              <a href="#">Careers</a>
-            </li>
-            <li>
-              <a href="#">Press</a>
-            </li>
-            <li>
-              <a href="#">Blog</a>
-            </li>
-            <li>
-              <a href="#">Partners</a>
+              <a href="#featured">Featured Cars</a>
             </li>
           </ul>
         </div>
 
         {/* Support */}
-        <div className="max-w-80 flex flex-col items-start lg:items-center">
+        <div className="max-w-80 flex flex-col items-start lg:items-center mt-4">
           <p className="text-xl text-gray-800 lg:-ml-18 font-bold">SUPPORT</p>
-          <ul className="mt-3 -ml-3 flex flex-col gap-2 ">
+          <ul className="mt-3 -ml-3 flex flex-col gap-4 ">
             <li>
-              <a href="#">Help Center</a>
+              <a href="/help-center">Help Center</a>
             </li>
             <li>
-              <a href="#">Safety Information</a>
+              <a href="/help-center">Safety Information</a>
             </li>
             <li>
-              <a href="#">Cancellation Options</a>
+              <a href="/help-center">Cancellation Options</a>
             </li>
             <li>
-              <a href="#">Contact Us</a>
-            </li>
-            <li>
-              <a href="#">Accessibility</a>
+              <a href="#contact">Contact Us</a>
             </li>
           </ul>
         </div>
 
-        <div className="max-w-80 flex flex-col items-start lg:items-start">
+        <div className="max-w-80 flex flex-col items-start lg:items-start mt-4">
           <p className="text-lg text-gray-800 font-bold ">CONTACT</p>
-          <p className="flex">
-            Address: 123 Car St, Auto City, CA 90210
-          </p>
+            Address: Verem, Reis Magos<br /> Pin-403114, Goa, India<br />
+          <div className="flex pt-4"> 
+            <LuPhone size={16} className="mt-[5px] mr-2" />
+            <ul>
+              <li><a href="tel:+918007837458">+91 8007837458</a></li>
+              <li><a href="tel:+917867286682">+91 7867286682</a></li>
+            </ul>
+          </div>
+
+          <div className="flex pt-4"> 
+            <LuMail size={16} className="mt-[5px] mr-2" />
+            <ul>
+              <li><a href="mailto:carcastle@gmail.com">carcastle@gmail.com</a></li>
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -105,17 +106,11 @@ const Footer = () => {
       <div className="flex flex-col md:flex-row gap-2 items-center justify-between py-5">
         <p>
           © {new Date().getFullYear()}{" "}
-          <a href="https://prebuiltui.com">Car Castle</a>. All rights reserved.
+          <a href="#">Car Castle</a>. All rights reserved.
         </p>
         <ul className="flex items-center gap-4">
           <li>
-            <a href="#">Privacy</a>
-          </li>
-          <li>
-            <a href="#">Terms</a>
-          </li>
-          <li>
-            <a href="#">Sitemap</a>
+            <a href="#">Privacy Policy</a>
           </li>
         </ul>
       </div>

@@ -147,7 +147,7 @@ const ManageCars = () => {
 
       <div className="max-w-[900px] w-full rounded-md overflow-hidden border border-primary/30 mt-6">
         <table className="w-full table-auto border-collapse">
-          <thead className="text-gray-500 text-left">
+          <thead className="text-gray-500 text-left bg-white">
             <tr>
               <th className="p-3 font-medium ">Car</th>
               <th className="p-3 font-medium">Type</th>
@@ -161,8 +161,8 @@ const ManageCars = () => {
           <tbody>
             {cars.map((car) =>
               car._id ? (
-                <tr key={car._id} className="border-t border-primary/30">
-                  <td className="p-3 flex">
+                <tr key={car._id} className="border-t border-primary/30 bg-white">
+                  <td className="p-3 flex bg-white">
                     <div className="relative mr-2">
                       <Image
                         src={`${
