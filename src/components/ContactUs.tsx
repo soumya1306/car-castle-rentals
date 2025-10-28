@@ -1,7 +1,6 @@
 "use client";
 
 import { sendContactFormEmail } from "@/utils/emailService";
-import SuccessAlert from "./Admin/SuccessAlert";
 import SpinLoader from "./loaders/SpinLoader";
 import { useState } from "react";
 
@@ -41,7 +40,7 @@ export default function ContactUsSection() {
     // WhatsApp functionality
     if (submitSource === "whatsapp") {
       // Create WhatsApp message
-      const whatsappMessage = `Hello! I'm interested in Car Castle Rentals.
+      const whatsappMessage = `Hello! I&apos;m interested in Car Castle Rentals.
 
 *Name:* ${name}
 *Email:* ${email}
@@ -172,7 +171,7 @@ Please get back to me at your earliest convenience. Thank you!`;
             </svg>
           </div>
           <span className="text-green-600 font-medium">
-            Email sent successfully! We'll get back to you soon.
+            Email sent successfully! We&apos;ll get back to you soon.
           </span>
         </div>
       )}

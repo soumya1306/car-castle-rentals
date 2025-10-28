@@ -10,7 +10,6 @@
  */
 
 // Next.js and React imports
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 // Icon imports
@@ -359,7 +358,7 @@ Thank you!`;
                   </svg>
                 </div>
                 <span className="text-green-600 font-medium">
-                  Booking inquiry sent successfully! We'll contact you soon.
+                  Booking inquiry sent successfully! We&apos;ll contact you soon.
                 </span>
               </div>
             )}

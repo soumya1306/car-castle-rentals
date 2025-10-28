@@ -1,7 +1,6 @@
 "use client";
 
 import AdminTitle from "@/components/Admin/AdminTitle";
-import DeletePopup from "@/components/Admin/DeletePopup";
 import DropdownEditor from "@/components/Admin/DropdownEditor";
 import ErrorAlert from "@/components/Admin/ErrorAlert";
 import ImageEditor from "@/components/Admin/ImageEditor";
@@ -18,8 +17,8 @@ import { LuPencil, LuTrash2 } from "react-icons/lu";
 
 const ManageCars = () => {
   const [cars, setCars] = useState<Car[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<boolean>();
+  const [, setLoading] = useState(true);
+  const [, setError] = useState<boolean>();
   const [showErrorBanner, setShowErrorBanner] = useState(false);
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
 

@@ -14,7 +14,6 @@ import ErrorAlert from "@/components/Admin/ErrorAlert";
 const AddCar = () => {
   const [features, setFeatures] = useState<string[]>([]);
   const [imagePreviews, setImagePreviews] = useState<File[]>([]);
-  const [carData, setCarData] = useState<Car>({} as Car);
   const [isUploading, setIsUploading] = useState(false);
   const [showSuccessBanner, setShowSuccessBanner] = useState(false);
   const [showErrorBanner, setShowErrorBanner] = useState(false);

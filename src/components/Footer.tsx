@@ -110,7 +110,7 @@ const Footer = () => {
         </p>
         <ul className="flex items-center gap-4">
           <li>
-            <a href="#">Privacy Policy</a>
+            <a href="/privacy-policy">Privacy Policy</a>
           </li>
         </ul>
       </div>

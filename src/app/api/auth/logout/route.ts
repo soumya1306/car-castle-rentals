@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 /**
  * Handles POST requests for admin logout
@@ -10,7 +10,7 @@ import { NextRequest, NextResponse } from "next/server";
  * // Logout (client should clear tokens)
  * POST /api/auth/logout
  */
-export async function POST(request: NextRequest) {
+export async function POST() {
   try {
     // In a stateless JWT system, logout is handled client-side by removing tokens
     // This endpoint serves as a confirmation and for any server-side cleanup if needed

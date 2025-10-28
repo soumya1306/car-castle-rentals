@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LuLogOut, LuUser, LuLoader } from "react-icons/lu";
+import { LuLogOut, LuLoader } from "react-icons/lu";
 import { useAuth } from "@/contexts/AuthContext";
 import logoImg from "@/assets/car castle.png";
 

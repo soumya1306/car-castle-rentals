@@ -2,9 +2,8 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { LuLoader } from 'react-icons/lu';
-import ErrorAlert from './Admin/ErrorAlert';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { Car } from "@/types/car";
 import { fetchApi } from "@/utils/api";
 
-import Button from "./Button";
 import CarCard from "./CarCard/CarCard";
 import GridLoader from "@/components/loaders/GridLoader";
 import Title from "./Title";
