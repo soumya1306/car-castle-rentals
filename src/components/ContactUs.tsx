@@ -40,7 +40,7 @@ export default function ContactUsSection() {
     // WhatsApp functionality
     if (submitSource === "whatsapp") {
       // Create WhatsApp message
-      const whatsappMessage = `Hello! I&apos;m interested in Car Castle Rentals.
+      const whatsappMessage = `Hello! I\'m interested in Car Castle Rentals.
 
 *Name:* ${name}
 *Email:* ${email}
@@ -54,7 +54,7 @@ Please get back to me at your earliest convenience. Thank you!`;
       const encodedMessage = encodeURIComponent(whatsappMessage);
       
       // Car Castle Rentals WhatsApp number
-      const whatsappNumber = process.env.WHATSAPP_NUMBER_INQUIRY;
+      const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
       
       // Create WhatsApp URL
       const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;

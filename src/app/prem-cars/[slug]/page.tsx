@@ -112,15 +112,15 @@ const CarDetailsPage = ({ params }: CarDetailsPageProps) => {
     const whatsappMessage = `Hello! I'm interested in booking a premium car from Car Castle Rentals.
 
 *Car Details:*
-🚗 ${carDetails.brand} ${carDetails.model}
-💰 ₹${carDetails.pricePerDay}/day
-📍 Category: ${carDetails.category} (Premium)
+Car: ${carDetails.brand} ${carDetails.model}
+Price: ₹${carDetails.pricePerDay}/day
+Category: ${carDetails.category} (Premium)
 
 *Booking Details:*
-📅 Pick-up Date: ${pickupDate}
-📅 Return Date: ${returnDate}
-📍 Delivery Location: ${location}
-📞 Contact Number: ${contactNumber}
+Pick-up Date: ${pickupDate}
+Return Date: ${returnDate}
+Delivery Location: ${location}
+Contact Number: ${contactNumber}
 
 Please confirm the availability and provide further details for the premium car booking.
 
@@ -130,7 +130,7 @@ Thank you!`;
     const encodedMessage = encodeURIComponent(whatsappMessage);
 
     // Car Castle Rentals WhatsApp number
-    const whatsappNumber = process.env.WHATSAPP_NUMBER_INQUIRY;
+    const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
 
     // Create WhatsApp URL
     const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
