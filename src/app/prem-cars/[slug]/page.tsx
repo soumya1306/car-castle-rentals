@@ -130,11 +130,24 @@ Thank you!`;
     const encodedMessage = encodeURIComponent(whatsappMessage);
 
     // Car Castle Rentals WhatsApp number
-    const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+    const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "918895989070";
+    
+    // Debug logging for production issues
+    console.log("WhatsApp Number:", whatsappNumber);
+    console.log("Environment:", process.env.NODE_ENV);
 
     // Create WhatsApp URL
     const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    
+    // Additional validation
+    if (!whatsappNumber || whatsappNumber === "undefined") {
+      console.error("WhatsApp number is not properly configured");
+      alert("WhatsApp configuration error. Please try the email option or contact us directly at +91 8698503094");
+      return;
+    }
 
+    console.log("WhatsApp URL:", whatsappURL);
+    
     // Open WhatsApp in a new tab
     window.open(whatsappURL, "_blank");
   };
