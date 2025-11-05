@@ -156,16 +156,16 @@ Thank you!`;
     <div className="px-6 md:px-16 lg:px-24 xl:px-32 mt-16">
       {/* Navigation Back Button */}
       <button
-        className="flex items-center gap-2 mb-6 text-[18px] text-primary cursor-pointer"
+        className="flex items-center gap-2 mb-6 text-[14px] lg:text-[18px] text-primary cursor-pointer"
         onClick={() => router.back()}
       >
-        <FiArrowLeft className="inline mr-2 " />
+        <FiArrowLeft className="inline mr-2 max-md:h-4 max-sm:w-4" />
         Back to all Premium Cars
       </button>
 
       {/* Main Content */}
       {carDetails ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:mb-12">
           {/* Left Column - Car Details */}
           <div className="lg:col-span-2">
             {/* Car Image */}
@@ -179,54 +179,54 @@ Thank you!`;
 
             {/* Car Title and Basic Info */}
             <div className="space-y-6 text-primary mt-2">
-              <h1 className="text-3xl font-bold">
+              <h1 className="text-2xl lg:text-3xl font-bold">
                 {carDetails.brand} • {carDetails.model}
               </h1>
-              <p className="text-lg text-gray-600 -mt-2">
+              <p className="text-base lg:text-lg text-gray-600 -mt-2">
                 {carDetails.category} • {carDetails.year}
               </p>
 
               <hr className="border-gray-300 mt-4 mb-6" />
 
               {/* Car Specifications Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-8">
                 {/* Seating Capacity */}
-                <div className="flex flex-col items-center p-6 rounded-xl bg-primary/10">
-                  <LuUsers className="inline-block mr-1 h-5 w-5" />
-                  <span>{carDetails.seating_capacity} Seats</span>
+                <div className="flex flex-col items-center p-4 lg:p-6 rounded-xl bg-primary/10">
+                  <LuUsers className="inline-block mr-1 h-4 w-4 lg:h-5 lg:w-5 max-sm:h-4 max-sm:w-4" />
+                  <span className="text-sm lg:text-base">{carDetails.seating_capacity} Seats</span>
                 </div>
 
                 {/* Fuel Type */}
-                <div className="flex flex-col items-center p-6 rounded-xl bg-primary/10">
-                  <LuFuel className="inline-block mr-1 h-5 w-5" />
-                  <span>{carDetails.fuel_type}</span>
+                <div className="flex flex-col items-center p-4 lg:p-6 rounded-xl bg-primary/10">
+                  <LuFuel className="inline-block mr-1 h-4 w-4 lg:h-5 lg:w-5 max-sm:h-4 max-sm:w-4" />
+                  <span className="text-sm lg:text-base">{carDetails.fuel_type}</span>
                 </div>
 
                 {/* Transmission Type */}
-                <div className="flex flex-col items-center p-6 rounded-xl bg-primary/10">
-                  <LuCar className="inline-block mr-1 h-6 w-6" />
-                  <span>{carDetails.transmission}</span>
+                <div className="flex flex-col items-center p-4 lg:p-6 rounded-xl bg-primary/10">
+                  <LuCar className="inline-block mr-1 h-5 w-5 lg:h-6 lg:w-6 max-sm:h-4 max-sm:w-4" />
+                  <span className="text-sm lg:text-base">{carDetails.transmission}</span>
                 </div>
 
                 {/* Location */}
-                <div className="flex flex-col items-center p-6 rounded-xl bg-primary/10">
-                  <LuMapPin className="inline-block mr-1 h-5 w-5" />
-                  <span>{carDetails.location}</span>
+                <div className="flex flex-col items-center p-4 lg:p-6 rounded-xl bg-primary/10">
+                  <LuMapPin className="inline-block mr-1 h-4 w-4 lg:h-5 lg:w-5 max-sm:h-4 max-sm:w-4" />
+                  <span className="text-sm lg:text-base">{carDetails.location}</span>
                 </div>
               </div>
 
               {/* Car Description */}
               <div>
-                <h1 className="text-2xl font-medium mb-3">Description</h1>
-                <p className="text-gray-500 text-[18px]">
+                <h1 className="text-xl lg:text-2xl font-medium mb-3">Description</h1>
+                <p className="text-gray-500 text-[14px] lg:text-[18px]">
                   {carDetails?.description}
                 </p>
               </div>
 
               {/* Features */}
               <div>
-                <h1 className="text-2xl font-medium mb-3">Features</h1>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <h1 className="text-xl lg:text-2xl font-medium mb-3">Features</h1>
+                <ul className="grid grid-cols-1 lg:grid-cols-2 gap-2 lg:gap-4">
                   {[
                     "Bluetooth Connectivity",
                     "GPS Navigation",
@@ -235,9 +235,9 @@ Thank you!`;
                   ].map((feature, index) => (
                     <li
                       key={index}
-                      className="flex items-center text-gray-500 text-[18px] py-3"
+                      className="flex items-center text-gray-500 text-[14px] lg:text-[18px] py-2 lg:py-3"
                     >
-                      <LuCircleCheckBig className="mr-2 text-green-500" />
+                      <LuCircleCheckBig className="mr-2 text-green-500 max-sm:h-4 max-sm:w-4" />
                       {feature}
                     </li>
                   ))}
@@ -248,17 +248,17 @@ Thank you!`;
 
           {/* Right Column - Booking Section */}
           <form
-            className="flex flex-col shadow-lg h-max sticky top-18 rounded-xl p-6 space-y-6 text-gray-500 justify-center"
+            className="flex flex-col shadow-lg h-max sticky top-18 rounded-xl p-4 space-y-6 bg-white text-gray-500 justify-center"
             action={handleFormSubmit}
           >
-            <p className="flex flex-col text-2xl text-gray-800 font-semibold">
+            <p className="flex flex-col text-xl lg:text-2xl text-gray-800 font-semibold">
               ₹ {carDetails.pricePerDay}
-              <span className="text-xl text-gray-400 font-normal">
+              <span className="text-lg lg:text-xl text-gray-400 font-normal">
                 {" "}
                 per day
               </span>
             </p>
-            <div className="flex flex-col gap-2 text-[18px]">
+            <div className="flex flex-col gap-2 text-[14px] lg:text-[18px]">
               <label htmlFor="pickup-date">Pick-up Date</label>
               <input
                 type="date"
@@ -270,7 +270,7 @@ Thank you!`;
               />
             </div>
 
-            <div className="flex flex-col gap-2 text-[18px]">
+            <div className="flex flex-col gap-2 text-[14px] lg:text-[18px]">
               <label htmlFor="return-date">Return Date</label>
               <input
                 type="date"
@@ -282,7 +282,7 @@ Thank you!`;
               />
             </div>
 
-            <div className="flex flex-col gap-2 text-[18px]">
+            <div className="flex flex-col gap-2 text-[14px] lg:text-[18px]">
               <label htmlFor="location">Delivery Location</label>
               <p className="text-xs -mt-2">* Charges may apply for delivery</p>
               <input
@@ -294,7 +294,7 @@ Thank you!`;
               />
             </div>
 
-            <div className="flex flex-col gap-2 text-[18px]">
+            <div className="flex flex-col gap-2 text-[14px] lg:text-[18px]">
               <label htmlFor="contact-number">Contact Number</label>
               <PhoneInput
                 country={"in"}
@@ -321,7 +321,7 @@ Thank you!`;
 
             <div className="flex gap-4">
               <button
-                className="bg-green-600 hover:bg-green-700 justify-center text-[14px] text-white py-3 px-4 rounded-lg mx-auto mt-4 cursor-pointer flex items-center gap-2 transition-colors"
+                className="bg-green-600 hover:bg-green-700 justify-center text-[14px] text-white py-3 px-2 lg:px-4 md:px-1 rounded-lg mt-4 cursor-pointer flex items-center gap-2 transition-colors"
                 type="submit"
                 onClick={() => setSubmitSource("whatsapp")}
               >
@@ -335,9 +335,11 @@ Thank you!`;
                 Book via WhatsApp
               </button>
               <button
-                className="bg-primary justify-center text-[14px] text-white py-3 px-4 rounded-lg mx-auto mt-4 cursor-pointer"
+                className="bg-primary justify-center text-[14px] text-white py-3 px-2 lg:px-4 rounded-lg mx-auto mt-4 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
                 type="submit"
-                onClick={() => setSubmitSource("callback")}
+                onClick={() => {
+                  setSubmitSource("callback");
+                }}
                 disabled={emailLoading}
               >
                 Request a callback

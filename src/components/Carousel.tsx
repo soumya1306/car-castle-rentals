@@ -128,7 +128,7 @@ const Carousel: React.FC<CarouselProps> = ({
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-400 z-10"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 max-sm:opacity-100 group-hover:opacity-100 transition-all duration-400 z-10"
             aria-label="Previous image"
           >
             <LuChevronLeft className="w-5 h-5" />
@@ -136,7 +136,7 @@ const Carousel: React.FC<CarouselProps> = ({
           
           <button
             onClick={goToNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-400 z-10"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 max-sm:opacity-100 group-hover:opacity-100 transition-all duration-400 z-10"
             aria-label="Next image"
           >
             <LuChevronRight className="w-5 h-5" />

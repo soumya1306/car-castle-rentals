@@ -27,7 +27,6 @@ const SearchBar = ({ onSearch, placeholder = "Search by model" }: SearchBarProps
         value={searchTerm}
         onChange={handleSearchChange}
       />
-      <FiFilter className="text-gray-400 w-5 h-5 ml-auto" />
     </div>
   );
 };

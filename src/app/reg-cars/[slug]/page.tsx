@@ -130,7 +130,7 @@ Thank you!`;
     const encodedMessage = encodeURIComponent(whatsappMessage);
 
     // Car Castle Rentals WhatsApp number
-    const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8895989070";
+    const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
     
     // Debug logging for production issues
     console.log("WhatsApp Number:", whatsappNumber);
@@ -156,16 +156,16 @@ Thank you!`;
     <div className="px-6 md:px-16 lg:px-24 xl:px-32 mt-16">
       {/* Navigation Back Button */}
       <button
-        className="flex items-center gap-2 mb-6 text-[18px] text-primary cursor-pointer"
+        className="flex items-center gap-2 mb-6 text-[14px] lg:text-[18px] text-primary cursor-pointer"
         onClick={() => router.back()}
       >
         <FiArrowLeft className="inline mr-2 " />
-        Back to all Premium Cars
+        Back to all Regular Cars
       </button>
 
       {/* Main Content */}
       {carDetails ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:grid-cols-3 lg:mb-12">
           {/* Left Column - Car Details */}
           <div className="lg:col-span-2">
             {/* Car Image */}
@@ -179,10 +179,10 @@ Thank you!`;
 
             {/* Car Title and Basic Info */}
             <div className="space-y-6 text-primary mt-2">
-              <h1 className="text-3xl font-bold">
+              <h1 className="text-2xl lg:text-3xl font-bold">
                 {carDetails.brand} • {carDetails.model}
               </h1>
-              <p className="text-lg text-gray-600 -mt-2">
+              <p className="text-[16px] lg:text-lg text-gray-600 -mt-2">
                 {carDetails.category} • {carDetails.year}
               </p>
 
@@ -192,40 +192,40 @@ Thank you!`;
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
                 {/* Seating Capacity */}
                 <div className="flex flex-col items-center p-6 rounded-xl bg-primary/10">
-                  <LuUsers className="inline-block mr-1 h-5 w-5" />
-                  <span>{carDetails.seating_capacity} Seats</span>
+                  <LuUsers className="inline-block mr-1 h-5 w-5 max-sm:h-4 max-sm:w-4" />
+                  <span className="max-sm:text-sm">{carDetails.seating_capacity} Seats</span>
                 </div>
 
                 {/* Fuel Type */}
                 <div className="flex flex-col items-center p-6 rounded-xl bg-primary/10">
-                  <LuFuel className="inline-block mr-1 h-5 w-5" />
-                  <span>{carDetails.fuel_type}</span>
+                  <LuFuel className="inline-block mr-1 h-5 w-5 max-sm:h-4 max-sm:w-4" />
+                  <span className="max-sm:text-sm">{carDetails.fuel_type}</span>
                 </div>
 
                 {/* Transmission Type */}
                 <div className="flex flex-col items-center p-6 rounded-xl bg-primary/10">
-                  <LuCar className="inline-block mr-1 h-6 w-6" />
-                  <span>{carDetails.transmission}</span>
+                  <LuCar className="inline-block mr-1 h-6 w-6 max-sm:h-5 max-sm:w-5" />
+                  <span className="max-sm:text-sm">{carDetails.transmission}</span>
                 </div>
 
                 {/* Location */}
                 <div className="flex flex-col items-center p-6 rounded-xl bg-primary/10">
-                  <LuMapPin className="inline-block mr-1 h-5 w-5" />
-                  <span>{carDetails.location}</span>
+                  <LuMapPin className="inline-block mr-1 h-5 w-5 max-sm:h-4 max-sm:w-4" />
+                  <span className="max-sm:text-sm">{carDetails.location}</span>
                 </div>
               </div>
 
               {/* Car Description */}
               <div>
-                <h1 className="text-2xl font-medium mb-3">Description</h1>
-                <p className="text-gray-500 text-[18px]">
+                <h1 className="text-xl lg:text-2xl font-medium mb-3">Description</h1>
+                <p className="text-gray-500 text-[14px] lg:text-[18px]">
                   {carDetails?.description}
                 </p>
               </div>
 
               {/* Features */}
               <div>
-                <h1 className="text-2xl font-medium mb-3">Features</h1>
+                <h1 className="text-xl lg:text-2xl font-medium mb-3">Features</h1>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
                     "Bluetooth Connectivity",
@@ -235,7 +235,7 @@ Thank you!`;
                   ].map((feature, index) => (
                     <li
                       key={index}
-                      className="flex items-center text-gray-500 text-[18px] py-3"
+                      className="flex items-center text-gray-500 text-[16px] lg:text-[18px] py-3"
                     >
                       <LuCircleCheckBig className="mr-2 text-green-500" />
                       {feature}
@@ -320,7 +320,7 @@ Thank you!`;
 
             <div className="flex gap-4">
               <button
-                className="bg-green-600 hover:bg-green-700 justify-center text-[14px] text-white py-3 px-4 rounded-lg mx-auto mt-4 cursor-pointer flex items-center gap-2 transition-colors"
+                className="bg-green-600 hover:bg-green-700 justify-center text-[14px] text-white py-3 px-2 lg:px-4 md:px-1 rounded-lg mt-4 cursor-pointer flex items-center gap-2 transition-colors"
                 type="submit"
                 onClick={() => setSubmitSource("whatsapp")}
               >
@@ -334,7 +334,7 @@ Thank you!`;
                 Book via WhatsApp
               </button>
               <button
-                className="bg-primary justify-center text-[14px] text-white py-3 px-4 rounded-lg mx-auto mt-4 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="bg-primary justify-center text-[14px] text-white py-3 px-2 lg:px-4 rounded-lg mx-auto mt-4 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
                 type="submit"
                 onClick={() => {
                   setSubmitSource("callback");
