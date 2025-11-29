@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyTokenEdge, extractTokenFromHeader, isAdmin } from '@/utils/auth-edge';
+import { verifyToken } from '@/utils/auth';
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   console.log('Middleware triggered for:', request.nextUrl.pathname);
 
   // For API routes that need protection
@@ -9,18 +9,18 @@ export async function middleware(request: NextRequest) {
       ['PUT', 'POST', 'DELETE'].includes(request.method)) {
     
     const authHeader = request.headers.get('authorization');
-    const token = extractTokenFromHeader(authHeader);
     
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
       );
     }
 
-    const payload = await verifyTokenEdge(token);
+    const token = authHeader.substring(7);
+    const payload = verifyToken(token);
 
-    if (!payload || !isAdmin(payload)) {
+    if (!payload || payload.role !== 'admin') {
       return NextResponse.json(
         { error: 'Admin access required' },
         { status: 403 }
@@ -46,6 +46,5 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/((?!_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.jpg$|.*\\.jpeg$|.*\\.gif$|.*\\.svg$).*)',
-  ],
-  runtime: 'edge', // Explicitly specify Edge Runtime
+  ]
 };
