@@ -6,6 +6,7 @@ import React from "react";
 
 import logo from "@/assets/car castle.png";
 import { LuMail, LuPhone } from "react-icons/lu";
+import { FiInstagram } from "react-icons/fi";
 
 const Footer = () => {
   const currentRoute = usePathname();
@@ -29,7 +30,13 @@ const Footer = () => {
             Car Castle Rentals offers reliable, budget-friendly, and premium cars for every journey. Enjoy hassle-free bookings, transparent pricing, and top-notch service—drive with confidence and comfort every time.
 
           </p>
-
+          <a href="https://www.instagram.com/carcastlegoa/?igsh=MWxoMXQ3NnFqazg5cQ%3D%3D#" target="_blank" rel="noopener noreferrer">
+            <FiInstagram
+              size={24}
+              className="mt-4 hover:text-gray-600 cursor-pointer"
+            />
+            
+          </a>
         </div>
 
         {/* Company */}
