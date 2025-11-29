@@ -19,36 +19,17 @@ function base64urlEncode(data: ArrayBuffer): string {
 }
 
 /**
- * Base64URL decode returning ArrayBuffer for Web Crypto API compatibility
+ * Base64URL decode
  */
 function base64urlDecode(data: string): ArrayBuffer {
-  try {
-    const base64 = data.replace(/-/g, '+').replace(/_/g, '/');
-    const padding = '='.repeat((4 - (base64.length % 4)) % 4);
-    const binaryString = atob(base64 + padding);
-    const bytes = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-      bytes[i] = binaryString.charCodeAt(i);
-    }
-    return bytes.buffer;
-  } catch (error) {
-    console.error('Base64URL decode error:', error);
-    throw new Error('Invalid base64url encoding');
+  const base64 = data.replace(/-/g, '+').replace(/_/g, '/');
+  const padding = '='.repeat((4 - (base64.length % 4)) % 4);
+  const binaryString = atob(base64 + padding);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
   }
-}
-
-/**
- * Base64URL decode returning string for JSON parsing
- */
-function base64urlDecodeString(data: string): string {
-  try {
-    const base64 = data.replace(/-/g, '+').replace(/_/g, '/');
-    const padding = '='.repeat((4 - (base64.length % 4)) % 4);
-    return atob(base64 + padding);
-  } catch (error) {
-    console.error('Base64URL decode string error:', error);
-    throw new Error('Invalid base64url encoding');
-  }
+  return bytes.buffer;
 }
 
 /**
@@ -69,8 +50,6 @@ async function verifySignature(data: string, signature: string, secret: string):
       ['verify']
     );
 
-    // The correct parameter order for crypto.subtle.verify is:
-    // verify(algorithm, key, signature, data)
     return await crypto.subtle.verify('HMAC', cryptoKey, signatureData, messageData);
   } catch (error) {
     console.error('Signature verification error:', error);
@@ -104,7 +83,8 @@ export async function verifyTokenEdge(token: string): Promise<JWTPayload | null>
     }
 
     // Decode payload
-    const payloadStr = base64urlDecodeString(payloadB64);
+    const payloadBuffer = base64urlDecode(payloadB64);
+    const payloadStr = new TextDecoder().decode(payloadBuffer);
     const payload = JSON.parse(payloadStr) as JWTPayload;
 
     // Check expiration
