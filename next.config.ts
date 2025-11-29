@@ -4,11 +4,11 @@ const VERCEL_BLOB_URL = process.env.VERCEL_BLOB_URL;
 
 // Define your whitelisted domains
 const ALLOWED_ORIGINS = [
-  'https://carcastlegoa.com',
-  'https://www.carcastlegoa.com',
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'https://car-castle-rentals.vercel.app', // Your Vercel domain
+  'https://carcastlegoa.com/*',
+  'https://www.carcastlegoa.com/*',
+  'http://localhost:3000/*',
+  'http://localhost:3001/*',
+  'https://car-castle-rentals.vercel.app/*', // Your Vercel domain
 ];
 
 const nextConfig: NextConfig = {
