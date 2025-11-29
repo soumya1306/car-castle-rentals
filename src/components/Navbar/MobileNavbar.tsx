@@ -13,7 +13,7 @@ export default function MobileNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="sm:hidden"  >
+    <div className="sm:hidden">
       <button className="p-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
         {isMenuOpen ? (
           <FiX className="w-6 h-6"></FiX>
