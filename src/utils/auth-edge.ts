@@ -7,27 +7,8 @@
 
 import { JWTPayload } from './auth';
 
-// JWT Configuration with better error handling for production
-let JWT_SECRET: string;
-
-try {
-  JWT_SECRET = process.env.JWT_SECRET || 'your-very-secure-jwt-secret-key-change-in-production-use-at-least-32-characters';
-  
-  // Validate JWT_SECRET
-  if (!JWT_SECRET || JWT_SECRET.length < 32) {
-    console.warn('JWT_SECRET is missing or too short. Using fallback.');
-    JWT_SECRET = 'your-very-secure-jwt-secret-key-change-in-production-use-at-least-32-characters';
-  }
-} catch (error) {
-  console.error('Error accessing JWT_SECRET:', error);
-  JWT_SECRET = 'your-very-secure-jwt-secret-key-change-in-production-use-at-least-32-characters';
-}
-
-// Debug environment in production (without exposing secrets)
-if (typeof process !== 'undefined' && process.env.NODE_ENV === 'production') {
-  console.log('[Auth-Edge] JWT_SECRET configured:', !!JWT_SECRET && JWT_SECRET.length >= 32);
-  console.log('[Auth-Edge] Runtime environment: Edge');
-}
+// JWT Configuration
+const JWT_SECRET = process.env.JWT_SECRET || 'your-very-secure-jwt-secret-key-change-in-production-use-at-least-32-characters';
 
 /**
  * Convert string to ArrayBuffer
@@ -73,17 +54,6 @@ function base64urlToString(base64url: string): string {
  */
 async function verifySignature(message: string, signature: string, secret: string): Promise<boolean> {
   try {
-    // Enhanced validation for production
-    if (!secret || secret.length < 32) {
-      console.error('JWT secret is too short or missing. Length:', secret?.length);
-      return false;
-    }
-
-    if (!message || !signature) {
-      console.error('Missing message or signature for verification');
-      return false;
-    }
-
     // Convert inputs to ArrayBuffers
     const secretBuffer = stringToArrayBuffer(secret);
     const messageBuffer = stringToArrayBuffer(message);
@@ -99,23 +69,14 @@ async function verifySignature(message: string, signature: string, secret: strin
     );
 
     // Verify the signature
-    const isValid = await crypto.subtle.verify(
+    return await crypto.subtle.verify(
       'HMAC',
       key,
       signatureBuffer,
       messageBuffer
     );
-
-    if (!isValid) {
-      console.error('Signature verification failed in Edge Runtime');
-    }
-
-    return isValid;
   } catch (error) {
-    console.error('Signature verification error in Edge Runtime:', error);
-    console.error('Message length:', message?.length);
-    console.error('Signature length:', signature?.length);
-    console.error('Secret available:', !!secret);
+    console.error('Signature verification error:', error);
     return false;
   }
 }
@@ -127,12 +88,6 @@ async function verifySignature(message: string, signature: string, secret: strin
  */
 export async function verifyTokenEdge(token: string): Promise<JWTPayload | null> {
   try {
-    // Enhanced validation for production debugging
-    if (!token) {
-      console.error('No token provided to verifyTokenEdge');
-      return null;
-    }
-
     // Split the JWT token
     const parts = token.split('.');
     if (parts.length !== 3) {
@@ -142,22 +97,12 @@ export async function verifyTokenEdge(token: string): Promise<JWTPayload | null>
 
     const [header, payload, signature] = parts;
 
-    // Log for debugging in production (without sensitive data)
-    if (process.env.NODE_ENV === 'production') {
-      console.log('JWT verification attempt in Edge Runtime');
-      console.log('Token parts:', parts.length);
-      console.log('Header length:', header.length);
-      console.log('Payload length:', payload.length);
-      console.log('Signature length:', signature.length);
-      console.log('JWT_SECRET available for verification:', !!JWT_SECRET);
-    }
-
     // Verify signature
     const message = `${header}.${payload}`;
     const isValid = await verifySignature(message, signature, JWT_SECRET);
     
     if (!isValid) {
-      console.error('JWT signature verification failed in Edge Runtime');
+      console.error('JWT signature verification failed');
       return null;
     }
 
@@ -168,16 +113,13 @@ export async function verifyTokenEdge(token: string): Promise<JWTPayload | null>
     // Check expiration
     const now = Math.floor(Date.now() / 1000);
     if (decodedPayload.exp && decodedPayload.exp < now) {
-      console.error('JWT token has expired. Exp:', decodedPayload.exp, 'Now:', now);
+      console.error('JWT token has expired');
       return null;
     }
 
-    console.log('JWT verification successful in Edge Runtime');
     return decodedPayload;
   } catch (error) {
-    console.error('JWT verification failed in Edge Runtime:', error);
-    console.error('Token provided:', !!token);
-    console.error('Environment:', process.env.NODE_ENV);
+    console.error('JWT verification failed:', error);
     return null;
   }
 }
