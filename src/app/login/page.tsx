@@ -122,11 +122,6 @@ function LoginForm() {
           {isLoading ? 'Signing In...' : 'Login'}
         </button>
 
-        <div className="mb-6">
-          <p className="text-xs text-gray-500">
-            Default credentials: admin@carcastle.com / admin123
-          </p>
-        </div>
       </form>
     </div>
   );

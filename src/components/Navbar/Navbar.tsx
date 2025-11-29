@@ -20,7 +20,7 @@ export default function Navbar() {
 
   return (
     <nav className="flex items-center w-full border-b-1 border-primary/20">
-      <div className="flex items-center lg:mx-18 justify-between w-full ">
+      <div className="flex items-center lg:mx-18 justify-between w-full">
         <Link href="/">
           <Image
             className="w-50 h-12 md:w-50 md:h-12 xl:w-65 xl:h-17 m-2"
