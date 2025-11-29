@@ -11,70 +11,67 @@ import { JWTPayload } from './auth';
 const JWT_SECRET = process.env.JWT_SECRET || 'your-very-secure-jwt-secret-key-change-in-production-use-at-least-32-characters';
 
 /**
- * Convert string to ArrayBuffer
+ * Base64URL encode
  */
-function stringToArrayBuffer(str: string): ArrayBuffer {
-  const encoder = new TextEncoder();
-  return encoder.encode(str).buffer;
+function base64urlEncode(data: ArrayBuffer): string {
+  const base64 = btoa(String.fromCharCode(...new Uint8Array(data)));
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 }
 
 /**
- * Base64URL decode to ArrayBuffer
+ * Base64URL decode returning ArrayBuffer for Web Crypto API compatibility
  */
-function base64urlToArrayBuffer(base64url: string): ArrayBuffer {
-  // Convert base64url to base64
-  const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
-  const padding = '='.repeat((4 - (base64.length % 4)) % 4);
-  const base64Padded = base64 + padding;
-  
-  // Decode base64 to binary string
-  const binaryString = atob(base64Padded);
-  
-  // Convert binary string to ArrayBuffer
-  const buffer = new ArrayBuffer(binaryString.length);
-  const view = new Uint8Array(buffer);
-  for (let i = 0; i < binaryString.length; i++) {
-    view[i] = binaryString.charCodeAt(i);
-  }
-  
-  return buffer;
-}
-
-/**
- * Base64URL decode to string
- */
-function base64urlToString(base64url: string): string {
-  const base64 = base64url.replace(/-/g, '+').replace(/_/g, '/');
-  const padding = '='.repeat((4 - (base64.length % 4)) % 4);
-  return atob(base64 + padding);
-}
-
-/**
- * Verify HMAC-SHA256 signature using Web Crypto API
- */
-async function verifySignature(message: string, signature: string, secret: string): Promise<boolean> {
+function base64urlDecode(data: string): ArrayBuffer {
   try {
-    // Convert inputs to ArrayBuffers
-    const secretBuffer = stringToArrayBuffer(secret);
-    const messageBuffer = stringToArrayBuffer(message);
-    const signatureBuffer = base64urlToArrayBuffer(signature);
+    const base64 = data.replace(/-/g, '+').replace(/_/g, '/');
+    const padding = '='.repeat((4 - (base64.length % 4)) % 4);
+    const binaryString = atob(base64 + padding);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+  } catch (error) {
+    console.error('Base64URL decode error:', error);
+    throw new Error('Invalid base64url encoding');
+  }
+}
 
-    // Import the secret key
-    const key = await crypto.subtle.importKey(
+/**
+ * Base64URL decode returning string for JSON parsing
+ */
+function base64urlDecodeString(data: string): string {
+  try {
+    const base64 = data.replace(/-/g, '+').replace(/_/g, '/');
+    const padding = '='.repeat((4 - (base64.length % 4)) % 4);
+    return atob(base64 + padding);
+  } catch (error) {
+    console.error('Base64URL decode string error:', error);
+    throw new Error('Invalid base64url encoding');
+  }
+}
+
+/**
+ * Verify HMAC SHA256 signature using Web Crypto API
+ */
+async function verifySignature(data: string, signature: string, secret: string): Promise<boolean> {
+  try {
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(secret);
+    const messageData = encoder.encode(data);
+    const signatureData = base64urlDecode(signature);
+
+    const cryptoKey = await crypto.subtle.importKey(
       'raw',
-      secretBuffer,
+      keyData,
       { name: 'HMAC', hash: 'SHA-256' },
       false,
       ['verify']
     );
 
-    // Verify the signature
-    return await crypto.subtle.verify(
-      'HMAC',
-      key,
-      signatureBuffer,
-      messageBuffer
-    );
+    // The correct parameter order for crypto.subtle.verify is:
+    // verify(algorithm, key, signature, data)
+    return await crypto.subtle.verify('HMAC', cryptoKey, signatureData, messageData);
   } catch (error) {
     console.error('Signature verification error:', error);
     return false;
@@ -91,35 +88,35 @@ export async function verifyTokenEdge(token: string): Promise<JWTPayload | null>
     // Split the JWT token
     const parts = token.split('.');
     if (parts.length !== 3) {
-      console.error('Invalid JWT format: expected 3 parts, got', parts.length);
+      console.error('Invalid JWT format');
       return null;
     }
 
-    const [header, payload, signature] = parts;
+    const [headerB64, payloadB64, signatureB64] = parts;
 
     // Verify signature
-    const message = `${header}.${payload}`;
-    const isValid = await verifySignature(message, signature, JWT_SECRET);
+    const data = `${headerB64}.${payloadB64}`;
+    const isValid = await verifySignature(data, signatureB64, JWT_SECRET);
     
     if (!isValid) {
-      console.error('JWT signature verification failed');
+      console.error('Invalid JWT signature');
       return null;
     }
 
-    // Decode and parse payload
-    const payloadJson = base64urlToString(payload);
-    const decodedPayload = JSON.parse(payloadJson) as JWTPayload;
+    // Decode payload
+    const payloadStr = base64urlDecodeString(payloadB64);
+    const payload = JSON.parse(payloadStr) as JWTPayload;
 
     // Check expiration
-    const now = Math.floor(Date.now() / 1000);
-    if (decodedPayload.exp && decodedPayload.exp < now) {
-      console.error('JWT token has expired');
+    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
+      console.error('JWT token expired');
       return null;
     }
 
-    return decodedPayload;
+    // Return the valid payload
+    return payload;
   } catch (error) {
-    console.error('JWT verification failed:', error);
+    console.error('Token verification failed:', error);
     return null;
   }
 }
