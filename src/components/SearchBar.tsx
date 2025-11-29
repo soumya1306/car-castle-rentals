@@ -1,5 +1,5 @@
 import React from "react";
-import { FiSearch } from "react-icons/fi";
+import { FiFilter, FiSearch } from "react-icons/fi";
 
 interface SearchBarProps {
   onSearch?: (query: string) => void;
