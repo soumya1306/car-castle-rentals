@@ -2,15 +2,6 @@ import type { NextConfig } from "next";
 
 const VERCEL_BLOB_URL = process.env.VERCEL_BLOB_URL;
 
-// Define your whitelisted domains
-const ALLOWED_ORIGINS = [
-  'https://carcastlegoa.com/*',
-  'https://www.carcastlegoa.com/*',
-  'http://localhost:3000/*',
-  'http://localhost:3001/*',
-  'https://car-castle-rentals.vercel.app/*', // Your Vercel domain
-];
-
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [new URL(`${VERCEL_BLOB_URL}/**`)],
@@ -25,7 +16,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: ALLOWED_ORIGINS.join(', '),
+            value: '*', // Allow all origins for now to fix the 403 error
           },
           {
             key: 'Access-Control-Allow-Methods',
@@ -37,7 +28,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Access-Control-Allow-Credentials',
-            value: 'true',
+            value: 'false', // Must be false when using wildcard origin
           },
           {
             key: 'Access-Control-Max-Age',
@@ -51,7 +42,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Access-Control-Allow-Origin',
-            value: ALLOWED_ORIGINS.join(', '),
+            value: '*', // Allow all origins for API routes
           },
           {
             key: 'Access-Control-Allow-Methods',
@@ -63,33 +54,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Access-Control-Allow-Credentials',
-            value: 'true',
-          },
-        ],
-      },
-    ];
-  },
-
-  // Optional: Rewrites for domain-specific routing
-  async rewrites() {
-    return [
-      {
-        source: '/:path*',
-        destination: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'carcastlegoa.com',
-          },
-        ],
-      },
-      {
-        source: '/:path*',
-        destination: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.carcastlegoa.com',
+            value: 'false', // Must be false when using wildcard origin
           },
         ],
       },
